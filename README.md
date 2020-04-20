@@ -1,4 +1,4 @@
-# Self Reporting Server
+# Private Kit Service
 
 An `mvn` wrapper is bundled. 
 
