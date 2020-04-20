@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.privatekit</groupId>
-    <artifactId>self-reporting-server</artifactId>
+    <artifactId>private-kit-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>self-reporting-server</name>
-    <description>PrivateKit self reporting server</description>
+    <name>private-kit-service</name>
+    <description>PrivateKit service</description>
 
     <properties>
         <java.version>11</java.version>
