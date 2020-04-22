@@ -1,0 +1,104 @@
+#RAML 1.0
+annotationTypes:
+  SafePath:
+    type: any
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/80889155-bd0e-4c2c-83b2-a68a47a361f5/
+/waypoints:
+  get:
+    displayName: Get Waypoints
+    description: Gets all waypoints based on query parameters (lat, lon) and radius
+    responses:
+      "200":
+        description: Gets all waypoints based on query parameters (lat, lon) and radius
+        body:
+          application/json:
+            example:
+              strict: true
+              value:
+                data:
+                  -
+                    id: 00010203-0405-0607-0809-0a0b0c0d0e0f
+                    latitude: 40.689060
+                    longitude: -74.044636
+                    timestamp: 2020-04-11T22:47:10
+                    symptoms: []
+            properties:
+              data?:
+                type: waypoints
+                items:
+                  type: object
+    queryParameters:
+      latitude:
+        default: 46.345
+        example: 46.345
+        type: number
+        format: double
+      longitude:
+        default: -70.345
+        example: -70.345
+        type: number
+        format: double
+      radius:
+        default: 1
+        example: 1
+        type: number
+        format: float
+  post:
+    responses:
+      "200":
+        body:
+          application/json:
+            type: success
+    displayName: Add Waypoints
+    description: "Add redacted waypoints "
+    body:
+      application/json:
+        type: waypoints
+        items:
+          type: waypoint
+(SafePath):
+  name: Group
+  description: Group annotation
+types:
+  success:
+    example:
+      strict: true
+      value:
+        info: Waypoints were inserted successfully.
+    properties:
+      info:
+        example: success
+        type: string
+  waypoints:
+    minItems: 0
+    items:
+      type: waypoint
+  waypoint:
+    example:
+      strict: true
+      value:
+        id: 00010203-0405-0607-0809-0a0b0c0d0e0f
+        latitude: 40.689060
+        longitude: -74.044636
+        timestamp: 2020-04-11T22:47:10
+        symptoms: []
+    properties:
+      id:
+        example: 00010203-0405-0607-0809-0a0b0c0d0e0f
+        type: string
+      timestamp:
+        example: 2020-04-11T22:47:10
+        type: datetime-only
+      latitude:
+        example: 40.689060
+        type: number
+        format: double
+      longitude:
+        example: -74.044636
+        type: number
+        format: double
+      symptoms:
+        example: []
+        type: array
+title: PrivateKit API
+version: "1.0"

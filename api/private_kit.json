@@ -1,0 +1,180 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "PrivateKit API",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://anypoint.mulesoft.com/mocking/api/v1/links/80889155-bd0e-4c2c-83b2-a68a47a361f5/"
+    }
+  ],
+  "paths": {
+    "/waypoints": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Gets all waypoints based on query parameters (lat, lon) and radius",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "data": [
+                      {
+                        "id": "00010203-0405-0607-0809-0a0b0c0d0e0f",
+                        "latitude": 40.68906,
+                        "longitude": -74.044636,
+                        "timestamp": "2020-04-11T22:47:10",
+                        "symptoms": []
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/waypoints"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Gets all waypoints based on query parameters (lat, lon) and radius",
+        "operationId": "Get Waypoints",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "default": 46.345,
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "default": -70.345,
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "default": 1,
+              "format": "float",
+              "type": "number"
+            }
+          }
+        ]
+      },
+      "post": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/success"
+                }
+              }
+            }
+          }
+        },
+        "description": "Add redacted waypoints ",
+        "operationId": "Add Waypoints",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/waypoints"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "success": {
+        "example": {
+          "info": "Waypoints were inserted successfully."
+        },
+        "properties": {
+          "info": {
+            "example": "success",
+            "type": "string"
+          }
+        },
+        "required": [
+          "info"
+        ],
+        "type": "object"
+      },
+      "waypoints": {
+        "type": "string"
+      },
+      "waypoint": {
+        "example": {
+          "id": "00010203-0405-0607-0809-0a0b0c0d0e0f",
+          "latitude": 40.68906,
+          "longitude": -74.044636,
+          "timestamp": "2020-04-11T22:47:10",
+          "symptoms": []
+        },
+        "properties": {
+          "id": {
+            "example": "00010203-0405-0607-0809-0a0b0c0d0e0f",
+            "type": "string"
+          },
+          "timestamp": {
+            "example": "2020-04-11T22:47:10",
+            "type": "string"
+          },
+          "latitude": {
+            "format": "double",
+            "example": 40.68906,
+            "type": "number"
+          },
+          "longitude": {
+            "format": "double",
+            "example": -74.044636,
+            "type": "number"
+          },
+          "symptoms": {
+            "example": [],
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "timestamp",
+          "latitude",
+          "longitude",
+          "symptoms"
+        ],
+        "type": "object"
+      }
+    },
+    "responses": {},
+    "parameters": {},
+    "examples": {},
+    "requestBodies": {},
+    "headers": {},
+    "securitySchemes": {},
+    "links": {},
+    "callbacks": {}
+  },
+  "x-annotation-SafePath": {
+    "name": "Group",
+    "description": "Group annotation"
+  }
+}

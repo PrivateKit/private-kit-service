@@ -1,0 +1,384 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Register",
+    "version": "1.0"
+  },
+  "host": "anypoint.mulesoft.com",
+  "basePath": "/mocking/api/v1/links/61af9918-c790-4c55-91bc-50487c82b45b/",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "HTTPS",
+    "HTTP"
+  ],
+  "paths": {
+    "/app/register": {
+      "post": {
+        "operationId": "Registration of an APP",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "type": "object",
+              "x-amf-merge": [
+                {
+                  "$ref": "#/definitions/app"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "x-Admin": "group"
+    },
+    "/app/{namespace}": {
+      "parameters": [
+        {
+          "name": "namespace",
+          "required": true,
+          "in": "path",
+          "type": "string"
+        }
+      ],
+      "put": {
+        "operationId": "Update an App",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "type": "object",
+              "x-amf-merge": [
+                {
+                  "$ref": "#/definitions/app"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "Get an app by App Id or Namespace",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "x-amf-merge": [
+                {
+                  "$ref": "#/definitions/app"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "x-Admin": "group"
+    },
+    "/{app_namespace}/survey": {
+      "get": {
+        "operationId": "Get all Surveys for an App",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "x-amf-merge": [
+                  {
+                    "$ref": "#/definitions/survey"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      },
+      "post": {
+        "operationId": "Create a survey",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "type": "object",
+              "x-amf-merge": [
+                {
+                  "$ref": "#/definitions/survey"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "x-PrivateKit-Survey": "group"
+    },
+    "/{app_namespace}/survey/{survey_id}": {
+      "get": {
+        "operationId": "Get a Survey based on Survey Id",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "x-amf-merge": [
+                {
+                  "$ref": "#/definitions/survey"
+                }
+              ]
+            }
+          }
+        },
+        "security": [
+          {}
+        ]
+      },
+      "put": {
+        "operationId": "Update a survey based on survey id",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "type": "object",
+              "x-amf-merge": [
+                {
+                  "$ref": "#/definitions/survey"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {},
+        "security": [
+          {}
+        ]
+      },
+      "x-PrivateKit-Survey": "group"
+    },
+    "/{app_namespace}/survey/{survey_id}/response": {
+      "post": {
+        "operationId": "Post a survey response",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "x-amf-merge": [
+                  {
+                    "$ref": "#/definitions/survey_response"
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "x-PrivateKit-Survey": "group"
+    }
+  },
+  "x-PrivateKit-Survey": {
+    "name": "Group",
+    "description": "Group annotation"
+  },
+  "x-Admin": {
+    "name": "Group",
+    "description": "Group annotation"
+  },
+  "definitions": {
+    "option": {
+      "x-PrivateKit-Survey": "group",
+      "example": {
+        "strict": true,
+        "value": {
+          "key": "option_1",
+          "values": [
+            "Yes",
+            "No",
+            "MayBe"
+          ]
+        }
+      },
+      "type": "object",
+      "required": [
+        "key",
+        "values"
+      ],
+      "properties": {
+        "key": {
+          "example": "option_1",
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "example": "Yes",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "survey_response": {
+      "description": " ",
+      "x-PrivateKit-Survey": "group",
+      "type": "object",
+      "required": [
+        "response_value"
+      ],
+      "properties": {
+        "response_value": {
+          "example": "Great",
+          "type": "string"
+        },
+        "skipped": {
+          "example": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "app": {
+      "x-Admin": "group",
+      "type": "object",
+      "required": [
+        "namespace",
+        "key",
+        "status"
+      ],
+      "properties": {
+        "namespace": {
+          "example": "safepath",
+          "type": "string"
+        },
+        "key": {
+          "example": "Oj6m04uiCb",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "PENDING",
+            "APPROVED",
+            "REJECTED",
+            "INACTIVE"
+          ],
+          "example": "PENDING",
+          "type": "string"
+        }
+      }
+    },
+    "survey": {
+      "x-PrivateKit-Survey": "group",
+      "type": "object",
+      "required": [
+        "name",
+        "questions",
+        "options"
+      ],
+      "properties": {
+        "name": {
+          "example": "Symptoms Checker Survey",
+          "type": "string"
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "x-amf-merge": [
+              {
+                "$ref": "#/definitions/survey_question"
+              }
+            ]
+          }
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "x-amf-merge": [
+              {
+                "$ref": "#/definitions/option"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "survey_question": {
+      "x-PrivateKit-Survey": "group",
+      "type": "object",
+      "required": [
+        "question_text",
+        "question_type",
+        "option_key"
+      ],
+      "properties": {
+        "question_text": {
+          "example": "How are you doing today?",
+          "type": "string"
+        },
+        "question_type": {
+          "enum": [
+            "TEXT",
+            "CHECKBOX",
+            "SELECT",
+            "MULTISELECT",
+            "RANGE"
+          ],
+          "example": "TEXT",
+          "type": "string"
+        },
+        "required": {
+          "default": false,
+          "example": true,
+          "type": "boolean"
+        },
+        "option_key": {
+          "example": "option_1",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "x-amf-annotationTypes": {
+    "PrivateKit-Survey": {
+      "schema": {}
+    },
+    "Admin": {
+      "schema": {}
+    }
+  }
+}
