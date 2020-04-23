@@ -1,5 +1,5 @@
 # Private Kit Service
-![Build and Test](https://github.com/imanzano/private-kit-service/workflows/Java%20CI%20with%20Maven/badge.svg?branch=master)
+![CD](https://github.com/imanzano/private-kit-service/workflows/Build%20and%20Tests/badge.svg)
 
 An `mvn` wrapper is bundled. 
 
