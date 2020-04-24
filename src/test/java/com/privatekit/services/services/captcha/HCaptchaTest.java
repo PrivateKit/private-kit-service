@@ -30,7 +30,7 @@ public class HCaptchaTest {
     }
 
     @Test
-    public void verifyTrue() {
+    public void testVerifyTrue() {
 
         wireMockServer.stubFor(post(urlEqualTo(path))
                 .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded;charset=UTF-8"))
@@ -42,28 +42,28 @@ public class HCaptchaTest {
     }
 
     @Test
-    public void verifyFalse() {
+    public void testVerifyFalse() {
         wireMockServer.stubFor(post(urlEqualTo(path)).willReturn(okJson(makeValidResponseBody(false))));
         verify(false);
     }
 
     @Test
-    public void verifyFalseWhenInvalidStatusCode() {
+    public void testVerifyFalseWhenInvalidStatusCode() {
         wireMockServer.stubFor(post(urlEqualTo(path)).willReturn(badRequest()));
         verify(false);
     }
 
     @Test
-    public void verifyFalseWhenInvalidResponsePayload() {
+    public void testVerifyFalseWhenInvalidResponsePayload() {
         wireMockServer.stubFor(post(urlEqualTo(path)).willReturn(okJson("{}")));
         verify(false);
     }
 
     private void verify(Boolean expect) {
-        assertEquals(new HCaptcha(secret, getHCaptchaUrl()).verify(token), expect);
+        assertEquals(new HCaptcha(secret, getVerifyUrl()).verify(token), expect);
     }
 
-    private String getHCaptchaUrl() {
+    private String getVerifyUrl() {
         return "http://localhost:" + wireMockServer.port() + path;
     }
 

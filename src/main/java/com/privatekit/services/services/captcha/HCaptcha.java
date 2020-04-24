@@ -12,21 +12,19 @@ import java.util.List;
 
 public class HCaptcha implements Captcha {
 
-    private final String secretKey;
-    private final String hCaptchaUrl;
+    private final String secret;
+    private final String verifyUrl;
 
-    public HCaptcha(String secretKey, String hCaptchaUrl) {
-        this.secretKey = secretKey;
-        this.hCaptchaUrl = hCaptchaUrl;
+    public HCaptcha(String secret, String verifyUrl) {
+        this.secret = secret;
+        this.verifyUrl = verifyUrl;
     }
 
     @Override
     public Boolean verify(String token) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = makeHeaders();
-        HttpEntity<MultiValueMap<String, String>> request = makeHttpEntity(headers, token);
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(URI.create(hCaptchaUrl), request, String.class);
+            ResponseEntity<String> response = new RestTemplate()
+                    .postForEntity(URI.create(verifyUrl), makeHttpEntity(makeHeaders(), token), String.class);
             return verifyFromResponse(response);
         } catch (Exception e) {
             return false;
@@ -45,7 +43,7 @@ public class HCaptcha implements Captcha {
     private HttpEntity<MultiValueMap<String, String>> makeHttpEntity(HttpHeaders headers, String token) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("response", token);
-        map.add("secret", secretKey);
+        map.add("secret", secret);
         return new HttpEntity<>(map, headers);
     }
 
