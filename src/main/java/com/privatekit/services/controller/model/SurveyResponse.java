@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +13,11 @@ import java.util.List;
 public class SurveyResponse {
 
     @JsonProperty(value = "question_id",required = true)
+    @NotEmpty(message = "question_id is missed")
     private String questionId;
 
     @JsonProperty(value = "response_value",required = true)
+    @NotEmpty(message = "response_value list is missed")
     private List<String> responseValue = new ArrayList<>();
 
     private boolean skkiped;

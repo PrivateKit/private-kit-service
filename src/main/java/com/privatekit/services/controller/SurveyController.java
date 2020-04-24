@@ -3,6 +3,7 @@ package com.privatekit.services.controller;
 import com.google.inject.internal.util.Lists;
 import com.privatekit.services.controller.model.*;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,7 +37,6 @@ public class SurveyController {
         final Question q2 = new Question();
         q2.setQuestionKey("2");
         q2.setQuestionType("END");
-        q2.setUiType("Alert");
 
         final Question q3 = new Question();
         q3.setQuestionKey("3");
@@ -62,14 +62,17 @@ public class SurveyController {
     @PostMapping(value = "/v1.0/{app_namespace}/survey",
             consumes={MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public void postSurvey(@PathVariable("app_namespace") String appNamespace, @RequestBody Survey survey) {
+    public void postSurvey(@PathVariable("app_namespace") String appNamespace,
+                           @Validated @RequestBody Survey survey) {
 
     }
 
     @PostMapping(value = "/v1.0/{app_id}/survey/{survey_id}/response",
             consumes={MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public void addSurveyResponse(@PathVariable("app_id") String appId, @PathVariable("survey_id") String surveyId, @RequestBody List<SurveyResponse> surveyResponses) {
+    public void addSurveyResponse(@PathVariable("app_id") String appId,
+                                  @PathVariable("survey_id") String surveyId,
+                                  @Validated @RequestBody List<SurveyResponse> surveyResponses) {
     }
 
 //    @PostMapping(value = "/v1.0/app/register",

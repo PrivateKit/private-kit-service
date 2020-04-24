@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.assertj.core.util.Lists.list;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -48,14 +49,22 @@ public class SurveyControllerTest {
     @Test
     void testPostSurvey() throws Exception
     {
-        final Survey survey = new Survey();
-
 
         mockMvc.perform(post("/v1.0/none/survey").content(asJsonString(createMockSurvey()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 //.andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testPostSurveyBadRequest() throws Exception
+    {
+        mockMvc.perform(post("/v1.0/none/survey").content(asJsonString(new Survey()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                //.andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -83,7 +92,7 @@ public class SurveyControllerTest {
     private Survey createMockSurvey() {
         final Survey survey = new Survey();
         survey.setName("Symptoms Checker Survey");
-
+        survey.setDescription("Symptoms Checker Survey");
         final Question q1 = new Question();
 
         q1.setQuestionKey("1");
@@ -99,7 +108,6 @@ public class SurveyControllerTest {
         final Question q2 = new Question();
         q2.setQuestionKey("2");
         q2.setQuestionType("END");
-        q2.setUiType("Alert");
 
         final Question q3 = new Question();
         q3.setQuestionKey("3");
