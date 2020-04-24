@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 # Created by https://www.gitignore.io/api/maven,intellij+iml
 # Edit at https://www.gitignore.io/?templates=maven,intellij+iml
@@ -101,6 +102,9 @@ buildNumber.properties
 
 .DS_Store
 =======
+=======
+.DS_Store
+>>>>>>> Add Survery controller and model
 # Compiled class file
 *.class
 
