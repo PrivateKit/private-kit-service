@@ -33,6 +33,6 @@ public class WaypointsControllerTest {
     @Test
     void testPostWaypoint() throws Exception
     {
-        mockMvc.perform(post("/v1.0/none/waypoints")).andDo(print()).andExpect(status().isOk());
+        mockMvc.perform(post("/v1.0/none/waypoints")).andExpect(status().isOk());
     }
 }
