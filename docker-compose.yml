@@ -26,7 +26,10 @@ services:
     ports:
       - 8080:8080
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/privatekitservicedb
+      DB_URL: jdbc:postgresql://postgres:5432/privatekitservicedb
+      DB_USERNAME: privatekit
+      DB_PASSWORD: privatekit
+
     restart: unless-stopped
     depends_on:
       - postgres
