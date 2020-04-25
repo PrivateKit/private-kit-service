@@ -16,9 +16,7 @@ services:
       - POSTGRES_DB=privatekitservicedb
     restart: unless-stopped
   self-reporting-server:
-    build:
-      context: .
-      target: self-reporting-server
+    build: .
     network_mode: bridge
     container_name: self-reporting-server
     expose:
