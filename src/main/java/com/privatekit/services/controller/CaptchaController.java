@@ -12,7 +12,7 @@ public class CaptchaController {
     private String siteKey;
 
     @GetMapping(value = "/v1.0/captcha")
-    public String emailModel(Model model) {
+    public String renderCaptcha(Model model) {
         model.addAttribute("siteKey", siteKey);
         return "captcha";
     }

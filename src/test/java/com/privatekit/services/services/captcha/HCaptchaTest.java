@@ -9,7 +9,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 public class HCaptchaTest {
 
     private final String secret = "YOUR-SECRET";

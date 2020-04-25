@@ -1,7 +1,10 @@
 package com.privatekit.services.services.captcha;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -10,12 +13,17 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@Profile("prod")
 public class HCaptcha implements Captcha {
 
     private final String secret;
     private final String verifyUrl;
 
-    public HCaptcha(String secret, String verifyUrl) {
+    public HCaptcha(
+            @Value("${captcha.secret}") String secret,
+            @Value("${captcha.verify-url}") String verifyUrl
+    ) {
         this.secret = secret;
         this.verifyUrl = verifyUrl;
     }
@@ -24,7 +32,10 @@ public class HCaptcha implements Captcha {
     public Boolean verify(String token) {
         try {
             ResponseEntity<String> response = new RestTemplate()
-                    .postForEntity(URI.create(verifyUrl), makeHttpEntity(makeHeaders(), token), String.class);
+                    .postForEntity(
+                            URI.create(verifyUrl),
+                            makeHttpEntity(makeHeaders(), token),
+                            String.class);
             return verifyFromResponse(response);
         } catch (Exception e) {
             return false;
