@@ -14,7 +14,7 @@ public class SurveyResponse {
 
     @JsonProperty(value = "question_id",required = true)
     @NotEmpty(message = "question_id is missed")
-    private String questionId;
+    private int questionId;
 
     @JsonProperty(value = "response_value",required = true)
     @NotEmpty(message = "response_value list is missed")
@@ -22,7 +22,7 @@ public class SurveyResponse {
 
     private boolean skkiped;
 
-    public static SurveyResponse create(String questionId, List<String> responseValue, boolean skkiped) {
+    public static SurveyResponse create(int questionId, List<String> responseValue, boolean skkiped) {
         final SurveyResponse r = new SurveyResponse();
         r.questionId = questionId;
         r.responseValue.addAll(responseValue);

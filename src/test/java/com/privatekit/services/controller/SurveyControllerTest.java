@@ -2,6 +2,7 @@ package com.privatekit.services.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.privatekit.services.controller.model.*;
+import com.privatekit.services.repository.SurveyRepository;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,12 +13,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Collection;
+
 import static org.assertj.core.util.Lists.list;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureWebMvc
@@ -25,11 +29,21 @@ public class SurveyControllerTest {
 
     //~ Instance Fields ..............................................................................................................................
     private MockMvc mockMvc;
+    @Autowired private SurveyRepository surveyRepository;
 
     @BeforeEach
     void initValues() {
 
         mockMvc             = standaloneSetup(surveyController).build();
+
+        final com.privatekit.services.entity.Survey s = new com.privatekit.services.entity.Survey();
+        s.setAppKey("abcdefg");
+        s.setName("Symptoms Checker Survey");
+        s.setDescription("Symptoms Checker Survey");
+        s.setAppNamespace("myNameSpace");
+
+        surveyRepository.save(s);
+
     }
 
     @Autowired
@@ -40,21 +54,47 @@ public class SurveyControllerTest {
     @Test
     void testGetSurveys() throws Exception
     {
-        mockMvc.perform(get("/v1.0/none/survey"))
+        mockMvc.perform(get("/v1.0/myNameSpace/survey"))
                 //.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").exists());
     }
 
     @Test
+    void testGetSurveysFromInvalidNamespace() throws Exception
+    {
+
+        com.privatekit.services.entity.Survey s = new com.privatekit.services.entity.Survey();
+        s.setAppKey("s");
+        s.setName("3");
+        s.setDescription("dd");
+        s.setAppNamespace("myNameSpace");
+
+        surveyRepository.save(s);
+
+        mockMvc.perform(get("/v1.0/none/survey"))
+                //.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
+    }
+
+    @Test
     void testPostSurvey() throws Exception
     {
 
-        mockMvc.perform(post("/v1.0/none/survey").content(asJsonString(createMockSurvey()))
+        assertTrue(surveyRepository.findByAppNamespace("anotherNamespace").isEmpty());
+
+        mockMvc.perform(post("/v1.0/anotherNamespace/survey").content(asJsonString(createMockSurvey()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 //.andDo(print())
                 .andExpect(status().isOk());
+
+        final Collection<com.privatekit.services.entity.Survey> list = surveyRepository.findByAppNamespace("anotherNamespace");
+
+        assertFalse(list.isEmpty());
+
+        assertEquals(1, list.size());
     }
 
     @Test
@@ -71,14 +111,29 @@ public class SurveyControllerTest {
     void testPostSurveyResponse() throws Exception
     {
 
-        final SurveyResponse response = SurveyResponse.create("12345", list("Great"), true);
+        final com.privatekit.services.entity.Survey survey = surveyRepository.findByAppNamespace("myNameSpace").iterator().next();
+        final SurveyResponse response = SurveyResponse.create(1234, list("Great"), true);
+
+        mockMvc.perform(post(String.format("/v1.0/%s/survey/%d/response","myNameSpace", survey.getId()))
+                .content(asJsonString(Lists.list(response)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                //.andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testPostSurveyResponseSurveyNotFound() throws Exception
+    {
+
+        final SurveyResponse response = SurveyResponse.create(1234, list("Great"), true);
 
         mockMvc.perform(post("/v1.0/1/survey/1/response")
                 .content(asJsonString(Lists.list(response)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 //.andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
     static String asJsonString(final Object obj) {

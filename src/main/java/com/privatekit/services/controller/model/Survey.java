@@ -35,4 +35,14 @@ public class Survey {
     @JsonProperty(value="screen_types", required = true)
     @NotEmpty(message = "screen_types are missed")
     private Map<String, String> screenTypes = new HashMap<>();
+
+    public static Survey from(com.privatekit.services.entity.Survey s) {
+
+        final Survey survey = new Survey();
+        survey.setName(s.getName());
+        survey.setDescription(s.getDescription());
+        survey.setImage(s.getImage());
+
+        return survey;
+    }
 }

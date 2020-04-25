@@ -47,4 +47,16 @@ public class Survey implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public static Survey from(com.privatekit.services.controller.model.Survey s) {
+
+        final Survey survey = new Survey();
+        survey.setName(s.getName());
+        survey.setDescription(s.getDescription());
+        survey.setImage(s.getImage());
+        // TODO the API model does not have App Key.
+        survey.setAppKey("FAKE VALUE!");
+
+        return survey;
+    }
 }
