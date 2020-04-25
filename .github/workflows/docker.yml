@@ -20,4 +20,5 @@ jobs:
         with:
           ref: master
       - name: Build the docker-compose stack
-        run: docker-compose up --detach --build
+        #run: docker-compose up --detach --build
+        run: docker build .
