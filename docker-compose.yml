@@ -1,0 +1,36 @@
+version: "3.4"
+services:
+  postgres:
+    image: postgres:latest
+    network_mode: bridge
+    container_name: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=privatekit
+      - POSTGRES_USER=privatekit
+      - POSTGRES_DB=privatekitservicedb
+    restart: unless-stopped
+  self-reporting-server:
+    build:
+      context: .
+      target: self-reporting-server
+    network_mode: bridge
+    container_name: self-reporting-server
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/privatekitservicedb
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    links:
+      - postgres
+volumes:
+  postgres-data:

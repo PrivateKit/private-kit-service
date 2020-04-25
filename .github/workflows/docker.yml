@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'master'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    # condition on the job makes sure that it is only run when the PR was actually merged (rather then being closed without merging).
+    if: github.event.pull_request.merged
+
+    steps:
+      - name: Checkout
+        if: github.event.pull_request.merged
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Build the docker-compose stack
+        run: docker-compose up --detach --build
