@@ -1,10 +1,11 @@
 name: Docker Image CI
 
-on: 
-  push:
+on:
+  pull_request:
+    types: [closed]
     branches:
       - 'master'
-        
+
 jobs:
   build:
 
@@ -13,9 +14,11 @@ jobs:
     if: github.event.pull_request.merged
 
     steps:
-      - name: Checkout        
+      - name: Checkout
+        if: github.event.pull_request.merged
         uses: actions/checkout@v2
         with:
           ref: master
       - name: Build the docker-compose stack
         run: docker-compose up --detach --build
+#        run: docker build .
