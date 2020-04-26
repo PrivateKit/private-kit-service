@@ -37,6 +37,9 @@ public class Question implements Serializable {
     @Column(name = "option_key")
     private String optionKey;
 
+    @Column(name = "survey_id", updatable = false, insertable = false)
+    private Integer surveyId;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
