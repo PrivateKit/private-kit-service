@@ -23,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 import static org.junit.jupiter.api.Assertions.*;
 
+import static com.google.inject.internal.util.Lists.newArrayList;
+
 @SpringBootTest
 @AutoConfigureWebMvc
 public class SurveyControllerTest {
@@ -157,7 +159,7 @@ public class SurveyControllerTest {
         q1.setScreenType("Checkbox");
         q1.setOptionKey("option_1");
 
-        q1.getConditions().addAll(com.google.inject.internal.util.Lists.newArrayList(QuestionCondition.create("Y", "3"), QuestionCondition.create("N", "2")));
+        q1.getConditions().addAll(newArrayList(QuestionCondition.create("Y", "3"), QuestionCondition.create("N", "2")));
 
 
         final Question q2 = new Question();
@@ -174,7 +176,7 @@ public class SurveyControllerTest {
 
         final Option opt1 = new Option();
         opt1.setKey("option_1");
-        opt1.setValues(com.google.inject.internal.util.Lists.newArrayList(OptionValue.create("Yes", "Y"), OptionValue.create("No", "N"), OptionValue.create("Maybe", "M")));
+        opt1.setValues(newArrayList(OptionValue.create("Yes", "Y"), OptionValue.create("No", "N"), OptionValue.create("Maybe", "M")));
 
         survey.getOptions().add(opt1);
 

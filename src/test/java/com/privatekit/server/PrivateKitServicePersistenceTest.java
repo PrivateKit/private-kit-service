@@ -17,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,9 +82,7 @@ public class PrivateKitServicePersistenceTest {
     @Test
     public void testBasicSurveyPersistenceWithoutNotNullShouldNotWork() {
         surveyToTest.setName(null);
-        assertThatThrownBy(() -> {
-            surveyRepository.save(surveyToTest);
-        }).isInstanceOf(DataIntegrityViolationException.class);
+        assertThatThrownBy(() -> surveyRepository.save(surveyToTest)).isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
@@ -106,12 +105,9 @@ public class PrivateKitServicePersistenceTest {
         response.setId(id);
         response.setSkipped(false);
         responseRepository.save(response);
-        final SurveyResponse found = responseRepository.findById(id).get();
-        assertThat(found).isEqualTo(response);
-        assertThat(found.getItems().size()).isEqualTo(2);
+        final Optional<SurveyResponse> maybeSurvey = responseRepository.findById(id);
+        assertThat(maybeSurvey.isPresent()).isTrue();
+        assertThat(maybeSurvey.get()).isEqualTo(response);
+        assertThat(maybeSurvey.get().getItems().size()).isEqualTo(2);
     }
-
-
-
-
 }

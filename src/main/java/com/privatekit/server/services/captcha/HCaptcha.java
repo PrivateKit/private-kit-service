@@ -60,6 +60,7 @@ public class HCaptcha implements Captcha {
 
     private Boolean verifyFromResponse(ResponseEntity<String> response) {
         String hCaptchaResponse = response.getBody();
+        if (hCaptchaResponse == null) return false;
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readTree(hCaptchaResponse).path("success").booleanValue();
