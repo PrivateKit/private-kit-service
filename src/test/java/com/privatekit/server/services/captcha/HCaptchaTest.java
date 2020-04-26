@@ -58,6 +58,18 @@ public class HCaptchaTest {
         verify(false);
     }
 
+    @Test
+    public void testVerifyFalseWhenBodyIsNull() {
+        wireMockServer.stubFor(post(urlEqualTo(path)).willReturn(noContent()));
+        verify(false);
+    }
+
+    @Test
+    public void testVerifyFalseWhenMapperException() {
+        wireMockServer.stubFor(post(urlEqualTo(path)).willReturn(okJson(makeInvalidResponseBody())));
+        verify(false);
+    }
+
     private void verify(Boolean expect) {
         assertEquals(new HCaptcha(secret, getVerifyUrl()).verify(token), expect);
     }
@@ -68,5 +80,9 @@ public class HCaptchaTest {
 
     private String makeValidResponseBody(Boolean success) {
         return String.format("{\"success\": %s}", success);
+    }
+
+    private String makeInvalidResponseBody() {
+        return "{\"succexx\": yyyy}";
     }
 }
