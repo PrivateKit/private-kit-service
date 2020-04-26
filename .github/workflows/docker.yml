@@ -1,6 +1,6 @@
 name: Docker Image CI
 
-on:
+on: 
   push:
     branches:
       - 'master'
@@ -13,8 +13,7 @@ jobs:
     if: github.event.pull_request.merged
 
     steps:
-      - name: Checkout
-        if: github.event.pull_request.merged
+      - name: Checkout        
         uses: actions/checkout@v2
         with:
           ref: master
