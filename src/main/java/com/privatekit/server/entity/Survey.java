@@ -40,12 +40,17 @@ public class Survey implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Survey survey = (Survey) o;
-        return Objects.equals(id, survey.id);
+        return Objects.equals(id, survey.id) &&
+                Objects.equals(name, survey.name) &&
+                Objects.equals(description, survey.description) &&
+                Objects.equals(image, survey.image) &&
+                Objects.equals(appNamespace, survey.appNamespace) &&
+                Objects.equals(appKey, survey.appKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name, description, image, appNamespace, appKey);
     }
 
     public static Survey from(com.privatekit.server.controller.model.Survey s) {

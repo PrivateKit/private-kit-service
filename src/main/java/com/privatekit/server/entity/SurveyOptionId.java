@@ -19,7 +19,7 @@ public class SurveyOptionId implements Serializable {
     private Integer surveyId;
 
     @Column(name = "option_key")
-    private Integer optionKey;
+    private String optionKey;
 
     @Override
     public boolean equals(Object o) {

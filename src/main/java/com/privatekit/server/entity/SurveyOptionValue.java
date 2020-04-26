@@ -20,31 +20,45 @@ public class SurveyOptionValue implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "survey_id", nullable = false)
-    private Integer surveyId;
-
-    @Column(name = "option_key", nullable = false)
-    private String optionKey;
-
     @Column(name = "option_label", nullable = false)
     private String optionLabel;
 
     @Column(name = "option_value", nullable = false)
     private String optionValue;
 
-    @Column(name = "option_description", nullable = false)
+    @Column(name = "option_description")
     private String optionDescription;
+
+    public SurveyOptionValue() {
+    }
+
+    public SurveyOptionValue(String optionLabel, String optionValue, String optionDescription, SurveyOption option) {
+        this.optionLabel = optionLabel;
+        this.optionValue = optionValue;
+        this.optionDescription = optionDescription;
+        this.option = option;
+    }
+
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "survey_id", nullable = false),
+            @JoinColumn(name = "option_key", nullable = false)})
+    private SurveyOption option;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SurveyOptionValue that = (SurveyOptionValue) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(optionLabel, that.optionLabel) &&
+                Objects.equals(optionValue, that.optionValue) &&
+                Objects.equals(optionDescription, that.optionDescription) &&
+                Objects.equals(option, that.option);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, optionLabel, optionValue, optionDescription, option);
     }
 }

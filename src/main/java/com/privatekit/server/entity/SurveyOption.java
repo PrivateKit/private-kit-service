@@ -3,12 +3,10 @@ package com.privatekit.server.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,8 +19,11 @@ public class SurveyOption implements Serializable {
     @EmbeddedId
     private SurveyOptionId id;
 
-    @Column(name = "option_group_id", nullable = false)
+    @Column(name = "option_group_id")
     private Integer optionGroupId;
+
+    @OneToMany(mappedBy = "option", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private Set<SurveyOptionValue> values;
 
     @Override
     public boolean equals(Object o) {
