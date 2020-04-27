@@ -1,4 +1,5 @@
 # Private Kit Service
+![CD](https://github.com/imanzano/private-kit-service/workflows/Build%20and%20Tests/badge.svg)
 
 An `mvn` wrapper is bundled. 
 

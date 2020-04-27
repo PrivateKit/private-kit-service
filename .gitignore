@@ -99,4 +99,9 @@ buildNumber.properties
 # End of https://www.gitignore.io/api/maven,intellij+iml
 
 .DS_Store
-
+logs/
+## File-based project format:
+*.iws
+*.iml
+*.ipr
+.idea/*
