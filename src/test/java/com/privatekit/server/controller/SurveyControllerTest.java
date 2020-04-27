@@ -213,7 +213,6 @@ public class SurveyControllerTest {
 
         final SurveyList list = fromJsonString(contentAsString, SurveyList.class);
 
-
         assertFalse(list.getData().isEmpty());
 
         assertEquals(1, list.getData().size());
