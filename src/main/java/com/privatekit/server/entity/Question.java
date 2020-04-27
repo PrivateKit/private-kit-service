@@ -31,7 +31,7 @@ public class Question implements Serializable {
     @Column(name = "question_required")
     private Boolean required;
 
-    @Column(name = "screen_type")
+    @Column(name = "screen_type_key")
     private String screenType;
 
     @Column(name = "option_key")
