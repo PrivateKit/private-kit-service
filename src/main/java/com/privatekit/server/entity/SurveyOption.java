@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -31,13 +32,15 @@ public class SurveyOption implements Serializable {
 
         surveyOption.setId(id);
 
-        option.getValues().forEach(v->{
-            SurveyOptionValue value = new SurveyOptionValue();
+        surveyOption.setValues(
+        option.getValues().stream().map(v->{
+            final SurveyOptionValue value = new SurveyOptionValue();
             value.setOptionDescription(v.getDescription());
             value.setOptionLabel(v.getLabel());
             value.setOptionValue(v.getValue());
             value.setOption(surveyOption);
-        });
+            return value;
+        }).collect(Collectors.toSet()));
 
         return surveyOption;
     }
