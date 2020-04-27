@@ -22,7 +22,14 @@ public class QuestionCondition implements Serializable {
     private QuestionConditionId id;
 
     @Column(name = "jump_to_key", nullable = false)
-    private Integer jumpToKey;
+    private String jumpToKey;
+
+    public static QuestionCondition from(com.privatekit.server.controller.model.QuestionCondition qc) {
+        final QuestionCondition questionCondition = new QuestionCondition();
+        questionCondition.setId(new QuestionConditionId());
+        questionCondition.setJumpToKey(qc.getJumpToKey());
+        return questionCondition;
+    }
 
     @Override
     public boolean equals(Object o) {

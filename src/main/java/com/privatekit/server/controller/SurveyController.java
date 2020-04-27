@@ -1,12 +1,13 @@
 package com.privatekit.server.controller;
 
+import com.privatekit.server.controller.model.Question;
 import com.privatekit.server.controller.model.Survey;
 import com.privatekit.server.controller.model.SurveyList;
 import com.privatekit.server.controller.model.SurveyResponse;
+import com.privatekit.server.entity.QuestionId;
 import com.privatekit.server.entity.SurveyResponseId;
 import com.privatekit.server.entity.SurveyResponseItem;
-import com.privatekit.server.repository.ResponseRepository;
-import com.privatekit.server.repository.SurveyRepository;
+import com.privatekit.server.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +29,19 @@ public class SurveyController {
     private SurveyRepository surveyRepository;
 
     @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private QuestionConditionRepository questionConditionRepository;
+
+    @Autowired
+    private OptionRepository optionRepository;
+
+    @Autowired
     private ResponseRepository responseRepository;
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey")
+    @Transactional
     public @ResponseBody SurveyList getSurveys(@PathVariable("app_namespace") String appNamespace) {
 
         final SurveyList surveysList = new SurveyList();
@@ -38,13 +49,19 @@ public class SurveyController {
         final Collection<com.privatekit.server.entity.Survey> all = surveyRepository.findByAppNamespace(appNamespace);
 
         all.forEach(s -> {
-            final Survey from = Survey.from(s);
+            final Survey survey = Survey.from(s);
+
+            final Collection<com.privatekit.server.entity.Question> questions = questionRepository.findBySurveyId(s.getId());
 
             //collect questions
+            questions.forEach(q-> survey.getQuestions().add(Question.from(q)));
+
+            //optionRepository.findById(s.getId())
+
             //collect options
             //collect screenTypes
 
-            surveysList.addSurvey(from);
+            surveysList.addSurvey(survey);
         });
 
         return surveysList;
@@ -99,9 +116,30 @@ public class SurveyController {
 
         final com.privatekit.server.entity.Survey surveyDb = com.privatekit.server.entity.Survey.from(survey);
         surveyDb.setAppNamespace(appNamespace);
-        surveyRepository.save(surveyDb);
+
+        final Integer surveyId = surveyRepository.save(surveyDb).getId();
 
         // save question
+        survey.getQuestions().forEach(q->{
+
+            final com.privatekit.server.entity.Question questionDb = com.privatekit.server.entity.Question.from(q);
+
+            questionDb.getId().setSurveyId(surveyId);
+
+            final QuestionId questionId = questionRepository.save(questionDb).getId();
+
+            q.getConditions().forEach(qc ->{
+
+                final com.privatekit.server.entity.QuestionCondition questionConditionDb =  com.privatekit.server.entity.QuestionCondition.from(qc);
+                questionConditionDb.getId().setSurveyId(questionId.getSurveyId());
+                questionConditionDb.getId().setQuestionKey(questionId.getQuestionKey());
+                questionConditionDb.getId().setResponse(qc.getResponse());
+                questionConditionRepository.save(questionConditionDb);
+
+            });
+        });
+
+
         // save options
         // save screenTypes
 
@@ -128,7 +166,11 @@ public class SurveyController {
 
             final SurveyResponseId id = new SurveyResponseId();
             id.setSurveyId(surveyId);
-            id.setQuestionKey(i.getQuestionId());
+
+            // ------------------------
+            // TODO !!!!HACK until the API model get consistency between data types
+            // ------------------------
+            id.setQuestionKey(Integer.toString(i.getQuestionId()));
             sr.setId(id);
             sr.setSkipped(i.isSkkiped());
 

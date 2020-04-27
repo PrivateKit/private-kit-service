@@ -38,7 +38,7 @@ public class PrivateKitServicePersistenceTest {
 
     private static final String RESPONSE_TEST_EXAMPLE_2 = "false";
 
-    private static final Integer QUESTION_KEY_TEST_EXAMPLE_1 = 1;
+    private static final String QUESTION_KEY_TEST_EXAMPLE_1 = "1";
 
     private static final String QUESTION_TYPE_EXAMPLE1 = "MULTI";
 
@@ -48,7 +48,7 @@ public class PrivateKitServicePersistenceTest {
 
     private static final String QUESTION_CONDITION_RESPONSE_EXAMPLE1 = "Y";
 
-    private static final Integer QUESTION_CONDITION_JUMP_TO_EXAMPLE1 = 2;
+    private static final String QUESTION_CONDITION_JUMP_TO_EXAMPLE1 = "2";
 
     private static final String OPTION_KEY_EXAMPLE1 = "option_1";
 

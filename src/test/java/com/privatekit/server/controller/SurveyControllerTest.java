@@ -2,6 +2,8 @@ package com.privatekit.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.privatekit.server.controller.model.*;
+import com.privatekit.server.entity.QuestionId;
+import com.privatekit.server.repository.QuestionRepository;
 import com.privatekit.server.repository.SurveyRepository;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,19 +13,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebM
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Collection;
 
+import static com.google.inject.internal.util.Lists.newArrayList;
 import static org.assertj.core.util.Lists.list;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import static org.junit.jupiter.api.Assertions.*;
-
-import static com.google.inject.internal.util.Lists.newArrayList;
 
 @SpringBootTest
 @AutoConfigureWebMvc
@@ -31,7 +32,12 @@ public class SurveyControllerTest {
 
     //~ Instance Fields ..............................................................................................................................
     private MockMvc mockMvc;
+
     @Autowired private SurveyRepository surveyRepository;
+
+    @Autowired private QuestionRepository questionRepository;
+
+    @Autowired private SurveyController surveyController;
 
     @BeforeEach
     void initValues() {
@@ -44,22 +50,45 @@ public class SurveyControllerTest {
         s.setDescription("Symptoms Checker Survey");
         s.setAppNamespace("myNameSpace");
 
-        surveyRepository.save(s);
+        com.privatekit.server.entity.Survey save = surveyRepository.save(s);
+
+        final com.privatekit.server.entity.Question q1 = new com.privatekit.server.entity.Question();
+        QuestionId id = new QuestionId();
+        id.setSurveyId(save.getId());
+        id.setQuestionKey("1");
+        q1.setOptionKey("option_1");
+        q1.setType("MULTI");
+        q1.setText("Select your symptoms?");
+        q1.setRequired(true);
+        q1.setScreenType("Checkbox");
+        q1.setId(id);
+
+        questionRepository.save(q1);
 
     }
 
-    @Autowired
-    private SurveyController surveyController;
 
     //~ Methods ......................................................................................................................................
 
     @Test
     void testGetSurveys() throws Exception
     {
-        mockMvc.perform(get("/v1.0/myNameSpace/survey"))
+        MvcResult mvcResult = mockMvc.perform(get("/v1.0/myNameSpace/survey"))
                 //.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data").exists());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").exists()).andReturn();
+
+        final String contentAsString = mvcResult.getResponse().getContentAsString();
+
+        final SurveyList surveyList = fromJsonString(contentAsString, SurveyList.class);
+        assertFalse(surveyList.getData().isEmpty());
+
+        final Survey survey = surveyList.getData().get(0);
+
+        assertEquals("Symptoms Checker Survey", survey.getName());
+        assertEquals("Symptoms Checker Survey", survey.getDescription());
+        assertFalse(survey.getQuestions().isEmpty());
+        //assertFalse(survey.getOptions().isEmpty());
     }
 
     @Test
@@ -146,6 +175,14 @@ public class SurveyControllerTest {
         }
     }
 
+    static <T> T fromJsonString(final String obj, Class<T> tr) {
+        try {
+            return new ObjectMapper().readValue(obj,tr);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Survey createMockSurvey() {
         final Survey survey = new Survey();
         survey.setName("Symptoms Checker Survey");
@@ -160,7 +197,6 @@ public class SurveyControllerTest {
         q1.setOptionKey("option_1");
 
         q1.getConditions().addAll(newArrayList(QuestionCondition.create("Y", "3"), QuestionCondition.create("N", "2")));
-
 
         final Question q2 = new Question();
         q2.setQuestionKey("2");

@@ -22,7 +22,7 @@ public class QuestionConditionId implements Serializable {
     private Integer surveyId;
 
     @Column(name = "question_key")
-    private Integer questionKey;
+    private String questionKey;
 
     @Override
     public boolean equals(Object o) {

@@ -41,4 +41,18 @@ public class Question {
     @NotEmpty(message = "condition list is missed")
     private List<QuestionCondition> conditions = new ArrayList<>();
 
+    public static Question from(com.privatekit.server.entity.Question s) {
+
+        final Question question = new Question();
+        question.setQuestionKey(s.getId().getQuestionKey().toString()); // TODO @marcos
+        question.setQuestionType(s.getType());
+        question.setOptionKey(s.getOptionKey());
+        question.setQuestionText(s.getText());
+        question.setImage(s.getImage());
+        question.setRequired(s.getRequired());
+        question.setScreenType(s.getScreenType());
+
+        return question;
+    }
+
 }

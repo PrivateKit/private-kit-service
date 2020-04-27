@@ -18,7 +18,6 @@ public class QuestionCondition {
     @NotEmpty(message = "jump_to_key is missed")
     private String jumpToKey;
 
-
     public static QuestionCondition create(String response, String jumpToKey) {
         final QuestionCondition questionCondition = new QuestionCondition();
         questionCondition.jumpToKey = jumpToKey;

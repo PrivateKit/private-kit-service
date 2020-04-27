@@ -40,6 +40,20 @@ public class Question implements Serializable {
     @Column(name = "survey_id", updatable = false, insertable = false)
     private Integer surveyId;
 
+    public static Question from(com.privatekit.server.controller.model.Question q) {
+        final Question question = new Question();
+        final QuestionId id = new QuestionId();
+        id.setQuestionKey(q.getQuestionKey());
+        question.setId(id);
+        question.setText(q.getQuestionText());
+        question.setImage(q.getImage());
+        question.setType(q.getQuestionType());
+        question.setRequired(q.isRequired());
+        question.setScreenType(q.getScreenType());
+        question.setOptionKey(q.getOptionKey());
+        return question;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
