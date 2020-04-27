@@ -16,17 +16,16 @@ CREATE TABLE surveys(
  );
 
 CREATE TABLE survey_option_groups(
-  option_group_id int PRIMARY KEY,
-  option_group_name varchar(45) not null
+  option_group_id varchar(80) PRIMARY KEY,
+  option_group_name varchar(45)
 );
 
 CREATE TABLE survey_options(
   survey_id int not null,
   option_key varchar(80) not null,
-  option_group_id int not null,
   PRIMARY KEY (survey_id, option_key),
   FOREIGN KEY (survey_id) REFERENCES surveys (id),
-  FOREIGN KEY (option_group_id) REFERENCES survey_option_groups (option_group_id)
+  FOREIGN KEY (option_key) REFERENCES survey_option_groups (option_group_id)
 );
 
 CREATE TABLE survey_option_values(
@@ -35,29 +34,44 @@ CREATE TABLE survey_option_values(
   option_key varchar(80) not null,
   option_label varchar(80) not null,
   option_value varchar(80) not null,
-  option_description varchar(255) not null,
+  option_description varchar(255),
   FOREIGN KEY (survey_id, option_key) REFERENCES survey_options (survey_id, option_key)
+);
+
+
+CREATE TABLE screen_types(
+	screen_type_key varchar(80) PRIMARY KEY,
+	screen_type_description varchar(255)
+);
+
+CREATE TABLE survey_screen_types(
+	screen_type_key varchar(80) not null,
+	survey_id int not null,
+	PRIMARY KEY (screen_type_key, survey_id),
+	FOREIGN KEY (survey_id) REFERENCES surveys (id),
+	FOREIGN KEY (screen_type_key) REFERENCES screen_types (screen_type_key)
 );
 
 CREATE TABLE questions(
   survey_id int not null,
-  question_key int not null,
+  question_key varchar(80) not null,
   question_text varchar(500),
   question_image varchar(255),
   question_type varchar(80) not null,
   question_required boolean,
-  screen_type varchar(80),
+  screen_type_key varchar(80),
   option_key varchar(80),
   PRIMARY KEY (survey_id, question_key),
   FOREIGN KEY (survey_id) REFERENCES surveys (id),
-  FOREIGN KEY (survey_id, option_key) REFERENCES survey_options (survey_id, option_key)
+  FOREIGN KEY (survey_id, option_key) REFERENCES survey_options (survey_id, option_key),
+  FOREIGN KEY (screen_type_key) REFERENCES screen_types (screen_type_key)
 );
 
 CREATE TABLE question_conditions(
-  response varchar(80),
+  response varchar(80) not null,
   survey_id int not null,
-  question_key int not null,
-  jump_to_key int not null,
+  question_key varchar(80) not null,
+  jump_to_key varchar(80) not null,
   PRIMARY KEY (response, survey_id, question_key),
   FOREIGN KEY (survey_id, question_key) REFERENCES questions (survey_id, question_key),
   FOREIGN KEY (survey_id, jump_to_key) REFERENCES questions (survey_id, question_key)
@@ -66,7 +80,7 @@ CREATE TABLE question_conditions(
 
 CREATE TABLE survey_responses(
   survey_id int not null,
-  question_key int not null,
+  question_key varchar(80) not null,
   skipped boolean not null,
   PRIMARY KEY (survey_id, question_key),
   FOREIGN KEY (survey_id, question_key) REFERENCES questions (survey_id, question_key)
@@ -75,7 +89,7 @@ CREATE TABLE survey_responses(
 CREATE TABLE survey_item_responses(
   id SERIAL PRIMARY KEY,
   survey_id int not null,
-  question_key int not null,
+  question_key varchar(80) not null,
   survey_item_response_value varchar(255) not null,
   FOREIGN KEY (survey_id, question_key) REFERENCES survey_responses (survey_id, question_key)
 );

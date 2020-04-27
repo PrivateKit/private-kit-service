@@ -14,22 +14,4 @@
 		<sqlFile path="db/changelog/changelog-1.0-0.sql" />
 	</changeSet>
 
-	<changeSet author="mforlenza" id="changelog-1.0-1">
-		<preConditions onFail="MARK_RAN">
-			<dbms type="postgresql" />
-			<not>
-				<tableExists tableName="screen_types" />
-			</not>
-		</preConditions>
-		<sqlFile path="db/changelog/changelog-1.0-1.sql" />
-	</changeSet>
-
-	<changeSet author="mforlenza" id="changelog-1.0-2">
-		<preConditions onFail="MARK_RAN">
-			<dbms type="postgresql" />
-				<tableExists tableName="screen_types" />
-		</preConditions>
-		<sqlFile path="db/changelog/changelog-1.0-2.sql" />
-	</changeSet>
-
 </databaseChangeLog>
