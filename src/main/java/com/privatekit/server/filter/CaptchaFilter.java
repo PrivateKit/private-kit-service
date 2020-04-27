@@ -49,7 +49,7 @@ public class CaptchaFilter extends OncePerRequestFilter {
         }
     }
 
-    private Boolean pathAndMethodCanBeIgnored(String path, String method) {
+    private boolean pathAndMethodCanBeIgnored(String path, String method) {
         return !matcher.match(path, method);
     }
 
