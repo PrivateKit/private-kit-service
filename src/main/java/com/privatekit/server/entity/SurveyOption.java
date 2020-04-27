@@ -36,6 +36,7 @@ public class SurveyOption implements Serializable {
             value.setOptionDescription(v.getDescription());
             value.setOptionLabel(v.getLabel());
             value.setOptionValue(v.getValue());
+            value.setOption(surveyOption);
         });
 
         return surveyOption;
