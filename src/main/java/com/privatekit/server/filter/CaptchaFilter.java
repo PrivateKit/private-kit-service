@@ -18,9 +18,16 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public class CaptchaFilter extends OncePerRequestFilter {
 
     private final Captcha captcha;
+    private final CaptchaFilterPathMatcher matcher;
 
-    public CaptchaFilter(Captcha captcha) {
+    public CaptchaFilter(Captcha captcha, CaptchaFilterPathMatcher pathMatcher) {
         this.captcha = captcha;
+        this.matcher = pathMatcher;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return pathAndMethodCanBeIgnored(request.getServletPath(), request.getMethod());
     }
 
     @Override
@@ -40,6 +47,10 @@ public class CaptchaFilter extends OncePerRequestFilter {
         } else {
             unauthorized(response);
         }
+    }
+
+    private Boolean pathAndMethodCanBeIgnored(String path, String method) {
+        return !matcher.match(path, method);
     }
 
     private void unauthorized(HttpServletResponse response) throws IOException {
