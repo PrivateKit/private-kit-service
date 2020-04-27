@@ -19,9 +19,6 @@ public class SurveyOption implements Serializable {
     @EmbeddedId
     private SurveyOptionId id;
 
-    @Column(name = "option_group_id")
-    private Integer optionGroupId;
-
     @OneToMany(mappedBy = "option", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<SurveyOptionValue> values;
 

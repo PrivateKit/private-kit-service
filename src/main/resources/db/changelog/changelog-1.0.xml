@@ -14,4 +14,14 @@
 		<sqlFile path="db/changelog/changelog-1.0-0.sql" />
 	</changeSet>
 
+	<changeSet author="mforlenza" id="changelog-1.0-1">
+		<preConditions onFail="MARK_RAN">
+			<dbms type="postgresql" />
+			<not>
+				<tableExists tableName="screen_types" />
+			</not>
+		</preConditions>
+		<sqlFile path="db/changelog/changelog-1.0-1.sql" />
+	</changeSet>
+
 </databaseChangeLog>

@@ -44,6 +44,8 @@ public class PrivateKitServicePersistenceTest {
 
     private static final String QUESTION_SCREEN_TYPE_EXAMPLE1 = "Checkbox";
 
+    private static final String QUESTION_SCREEN_TYPE_EXAMPLE2 = "911";
+
     private static final String QUESTION_OPTION_KEY_EXAMPLE1 = "option_1";
 
     private static final String QUESTION_CONDITION_RESPONSE_EXAMPLE1 = "Y";
@@ -79,6 +81,15 @@ public class PrivateKitServicePersistenceTest {
 
     @Autowired
     private OptionRepository optionRepository;
+
+    @Autowired
+    private ScreenTypeRepository screenTypeRepository;
+
+    @Autowired
+    private SurveyScreenTypeRepository surveyScreenTypeRepository;
+
+    @Autowired
+    private SurveyOptionGroupRepository surveyOptionGroupRepository;
 
     private Survey surveyToTest;
 
@@ -213,17 +224,55 @@ public class PrivateKitServicePersistenceTest {
     }
 
     @Test
+    public void testBasicScreenTypePersistenceShouldWork() {
+        final ScreenType screenType1 = new ScreenType();
+        screenType1.setId(QUESTION_SCREEN_TYPE_EXAMPLE1);
+        final ScreenType screenType2 = new ScreenType();
+        screenType2.setId(QUESTION_SCREEN_TYPE_EXAMPLE2);
+        final ScreenType screenTypePersisted1 = screenTypeRepository.save(screenType1);
+        final ScreenType screenTypePersisted2 =screenTypeRepository.save(screenType2);
+         assertThat(screenTypePersisted1).isEqualTo(screenType1);
+        assertThat(screenTypePersisted2).isEqualTo(screenType2);
+    }
+
+    @Test
     public void testCompleteSurveyPersistenceShouldWork() {
         final Survey persisted = surveyRepository.save(surveyToTest);
         final SurveyOption option = buildOption(persisted);
         final Question question = buildQuestion(persisted);
         final QuestionCondition condition = buildCondition(persisted);
+        final SurveyOptionGroup group = new SurveyOptionGroup();
+        group.setId(option.getId().getOptionKey());
+        final SurveyOptionGroup optionGroupPersisted = surveyOptionGroupRepository.save(group);
         final SurveyOption optionPersisted = optionRepository.save(option);
+        final ScreenType screenType1 = new ScreenType();
+        screenType1.setId(QUESTION_SCREEN_TYPE_EXAMPLE1);
+        final ScreenType screenType2 = new ScreenType();
+        screenType2.setId(QUESTION_SCREEN_TYPE_EXAMPLE2);
+        final SurveyScreenTypeId id1 = new SurveyScreenTypeId();
+        id1.setSurveyId(persisted.getId());
+        id1.setScreenTypeKey(QUESTION_SCREEN_TYPE_EXAMPLE1);
+        final SurveyScreenType surveyScreenType1 = new SurveyScreenType();
+        surveyScreenType1.setId(id1);
+        final SurveyScreenTypeId id2 = new SurveyScreenTypeId();
+        id2.setSurveyId(persisted.getId());
+        id2.setScreenTypeKey(QUESTION_SCREEN_TYPE_EXAMPLE1);
+        final SurveyScreenType surveyScreenType2 = new SurveyScreenType();
+        surveyScreenType2.setId(id2);
+        final ScreenType screenTypePersisted1 = screenTypeRepository.save(screenType1);
+        final ScreenType screenTypePersisted2 =screenTypeRepository.save(screenType2);
+        final SurveyScreenType surveyScreenTypePersisted1 = surveyScreenTypeRepository.save(surveyScreenType1);
+        final SurveyScreenType surveyScreenTypePersisted2 = surveyScreenTypeRepository.save(surveyScreenType2);
         final Question questionPersisted = questionRepository.save(question);
         final QuestionCondition conditionPersisted = questionConditionRepository.save(condition);
         assertThat(option).isEqualTo(optionPersisted);
+        assertThat(group).isEqualTo(optionGroupPersisted);
         assertThat(question).isEqualTo(questionPersisted);
         assertThat(condition).isEqualTo(conditionPersisted);
+        assertThat(screenTypePersisted1).isEqualTo(screenType1);
+        assertThat(screenTypePersisted2).isEqualTo(screenType2);
+        assertThat(surveyScreenTypePersisted1).isEqualTo(surveyScreenType1);
+        assertThat(surveyScreenTypePersisted2).isEqualTo(surveyScreenType2);
     }
 
 

@@ -3,31 +3,30 @@ package com.privatekit.server.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "survey_option_groups")
-public class SurveyOptionGroup implements Serializable {
+@Table(name = "screen_types")
+public class ScreenType implements Serializable {
+
+    private static final long serialVersionUID = -6247987332831325645L;
 
     @Id
-    @Column(name = "option_group_id")
+    @Column(name = "screen_type_key")
     private String id;
 
-    @Column(name = "option_group_name")
-    private String name;
+    @Column(name = "screen_type_description")
+    private String description;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SurveyOptionGroup that = (SurveyOptionGroup) o;
+        ScreenType that = (ScreenType) o;
         return Objects.equals(id, that.id);
     }
 

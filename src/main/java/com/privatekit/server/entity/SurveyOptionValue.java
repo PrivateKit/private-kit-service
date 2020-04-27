@@ -29,6 +29,12 @@ public class SurveyOptionValue implements Serializable {
     @Column(name = "option_description")
     private String optionDescription;
 
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "survey_id", nullable = false),
+            @JoinColumn(name = "option_key", nullable = false)})
+    private SurveyOption option;
+
     public SurveyOptionValue() {
     }
 
@@ -38,12 +44,6 @@ public class SurveyOptionValue implements Serializable {
         this.optionDescription = optionDescription;
         this.option = option;
     }
-
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "survey_id", nullable = false),
-            @JoinColumn(name = "option_key", nullable = false)})
-    private SurveyOption option;
 
     @Override
     public boolean equals(Object o) {
