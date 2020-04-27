@@ -6,9 +6,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Getter @Setter
 public class Survey {
@@ -34,7 +32,7 @@ public class Survey {
 
     @JsonProperty(value="screen_types", required = true)
     @NotEmpty(message = "screen_types are missed")
-    private Map<String, String> screenTypes = new HashMap<>();
+    private List<String> screenTypes = new ArrayList<>();
 
     public static Survey from(com.privatekit.server.entity.Survey s) {
 

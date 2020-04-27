@@ -45,6 +45,9 @@ public class SurveyController {
     private ScreenTypeRepository screenTypeRepository;
 
     @Autowired
+    private SurveyScreenTypeRepository surveyScreenTypeRepository;
+
+    @Autowired
     private ResponseRepository responseRepository;
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey")
@@ -88,6 +91,8 @@ public class SurveyController {
             }
 
             //collect screenTypes
+            final Collection<SurveyScreenType> screenTypes = surveyScreenTypeRepository.findById_SurveyId(s.getId());
+            screenTypes.forEach(st-> survey.getScreenTypes().add(st.getId().getScreenTypeKey()));
 
             surveysList.addSurvey(survey);
         });
@@ -139,6 +144,21 @@ public class SurveyController {
 
 
         // save screenTypes
+
+        survey.getScreenTypes().forEach(  st-> {
+            final ScreenType screenType = new ScreenType();
+            screenType.setId(st);
+
+            final SurveyScreenTypeId screenTypeId = new SurveyScreenTypeId();
+            screenTypeId.setSurveyId(surveyId);
+            screenTypeId.setScreenTypeKey(st);
+
+            final SurveyScreenType surveyScreenType = new SurveyScreenType();
+            surveyScreenType.setId(screenTypeId);
+
+            screenTypeRepository.save(screenType);
+            surveyScreenTypeRepository.save(surveyScreenType);
+        });
 
         return ResponseEntity.ok("survey was created successfully");
 

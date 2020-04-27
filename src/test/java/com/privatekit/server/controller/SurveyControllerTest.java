@@ -1,11 +1,11 @@
 package com.privatekit.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.privatekit.server.controller.model.*;
 import com.privatekit.server.controller.model.Question;
 import com.privatekit.server.controller.model.QuestionCondition;
 import com.privatekit.server.controller.model.Survey;
 import com.privatekit.server.controller.model.SurveyResponse;
+import com.privatekit.server.controller.model.*;
 import com.privatekit.server.entity.*;
 import com.privatekit.server.repository.*;
 import org.assertj.core.util.Lists;
@@ -43,7 +43,8 @@ public class SurveyControllerTest {
 
     @Autowired private QuestionRepository questionRepository;
     @Autowired private QuestionConditionRepository questionConditionRepository;
-    @Autowired private SurveyOptionGroupRepository surveyOptionGroupRepository;
+    @Autowired private SurveyScreenTypeRepository surveyScreenTypeRepository;
+    @Autowired private ScreenTypeRepository screenTypeRepository;
     @Autowired private OptionRepository optionRepository;
 
     @Autowired private SurveyController surveyController;
@@ -81,6 +82,26 @@ public class SurveyControllerTest {
                                 Lists.list( Lists.list("Y", "Yes"),
                                             Lists.list("N", "No"),
                                             Lists.list("M", "Maybe")));
+
+
+        final ScreenType screenType1 = new ScreenType();
+        screenType1.setId("911");
+        final ScreenType screenType2 = new ScreenType();
+        screenType2.setId("Checkbox");
+        final SurveyScreenTypeId id1 = new SurveyScreenTypeId();
+        id1.setSurveyId(surveyId);
+        id1.setScreenTypeKey("911");
+        final SurveyScreenType surveyScreenType1 = new SurveyScreenType();
+        surveyScreenType1.setId(id1);
+        final SurveyScreenTypeId id2 = new SurveyScreenTypeId();
+        id2.setSurveyId(surveyId);
+        id2.setScreenTypeKey("Checkboox");
+        final SurveyScreenType surveyScreenType2 = new SurveyScreenType();
+        surveyScreenType2.setId(id2);
+        screenTypeRepository.save(screenType1);
+        screenTypeRepository.save(screenType2);
+        surveyScreenTypeRepository.save(surveyScreenType1);
+        surveyScreenTypeRepository.save(surveyScreenType2);
 
     }
 
@@ -140,6 +161,10 @@ public class SurveyControllerTest {
         assertFalse(question.getConditions().isEmpty());
 
         assertFalse(survey.getOptions().isEmpty());
+
+        assertFalse(survey.getScreenTypes().isEmpty());
+
+        assertEquals(Lists.list("911","Checkboox"),survey.getScreenTypes());
     }
 
     @Test
@@ -267,7 +292,8 @@ public class SurveyControllerTest {
 
         survey.getOptions().add(opt1);
 
-        survey.getScreenTypes().put("Checkbox", "911");
+        survey.getScreenTypes().add("Checkbox");
+        survey.getScreenTypes().add("911");
 
         return  survey;
     }
