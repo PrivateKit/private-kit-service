@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Collection;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -209,11 +209,14 @@ public class SurveyControllerTest {
                 //.andDo(print())
                 .andExpect(status().isOk());
 
-        final Collection<com.privatekit.server.entity.Survey> list = surveyRepository.findByAppNamespace("4567");
+        final String contentAsString = mockMvc.perform(get("/v1.0/4567/survey")).andReturn().getResponse().getContentAsString();
 
-        assertFalse(list.isEmpty());
+        final SurveyList list = fromJsonString(contentAsString, SurveyList.class);
 
-        assertEquals(1, list.size());
+
+        assertFalse(list.getData().isEmpty());
+
+        assertEquals(1, list.getData().size());
     }
 
     @Test

@@ -5,10 +5,11 @@ import com.privatekit.server.controller.model.Survey;
 import com.privatekit.server.controller.model.SurveyResponse;
 import com.privatekit.server.controller.model.*;
 import com.privatekit.server.entity.App;
-import com.privatekit.server.entity.*;
 import com.privatekit.server.entity.QuestionCondition;
+import com.privatekit.server.entity.*;
 import com.privatekit.server.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.PersistenceException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +54,12 @@ public class SurveyController {
 
     @Autowired
     private ResponseRepository responseRepository;
+
+    @ExceptionHandler({ PersistenceException.class})
+    public ResponseEntity<Object> handleException() {
+        return new ResponseEntity<>(
+                "An error occurred processing the request.", new HttpHeaders(), BAD_REQUEST);
+    }
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey")
     @Transactional
