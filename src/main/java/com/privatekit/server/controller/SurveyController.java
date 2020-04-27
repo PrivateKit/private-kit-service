@@ -129,26 +129,6 @@ public class SurveyController {
         surveyDb.setAppKey(app.get().getId().getKey());
         final Integer surveyId = surveyRepository.save(surveyDb).getId();
 
-        // save question
-        survey.getQuestions().forEach(q->{
-
-            final com.privatekit.server.entity.Question questionDb = com.privatekit.server.entity.Question.from(q);
-
-            questionDb.getId().setSurveyId(surveyId);
-
-            final QuestionId questionId = questionRepository.save(questionDb).getId();
-
-            q.getConditions().forEach(qc ->{
-
-                final com.privatekit.server.entity.QuestionCondition questionConditionDb =  com.privatekit.server.entity.QuestionCondition.from(qc);
-                questionConditionDb.getId().setSurveyId(questionId.getSurveyId());
-                questionConditionDb.getId().setQuestionKey(questionId.getQuestionKey());
-                questionConditionDb.getId().setResponse(qc.getResponse());
-                questionConditionRepository.save(questionConditionDb);
-
-            });
-        });
-
         // save options
         survey.getOptions().forEach(o-> {
 
@@ -174,6 +154,26 @@ public class SurveyController {
 
             screenTypeRepository.save(screenType);
             surveyScreenTypeRepository.save(surveyScreenType);
+        });
+
+        // save question
+        survey.getQuestions().forEach(q->{
+
+            final com.privatekit.server.entity.Question questionDb = com.privatekit.server.entity.Question.from(q);
+
+            questionDb.getId().setSurveyId(surveyId);
+
+            final QuestionId questionId = questionRepository.save(questionDb).getId();
+
+            q.getConditions().forEach(qc ->{
+
+                final com.privatekit.server.entity.QuestionCondition questionConditionDb =  com.privatekit.server.entity.QuestionCondition.from(qc);
+                questionConditionDb.getId().setSurveyId(questionId.getSurveyId());
+                questionConditionDb.getId().setQuestionKey(questionId.getQuestionKey());
+                questionConditionDb.getId().setResponse(qc.getResponse());
+                questionConditionRepository.save(questionConditionDb);
+
+            });
         });
 
         return ResponseEntity.ok("survey was created successfully");
