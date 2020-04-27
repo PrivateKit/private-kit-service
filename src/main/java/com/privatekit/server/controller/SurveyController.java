@@ -6,6 +6,7 @@ import com.privatekit.server.controller.model.Survey;
 import com.privatekit.server.controller.model.SurveyResponse;
 import com.privatekit.server.entity.*;
 
+import com.privatekit.server.entity.App;
 import com.privatekit.server.entity.QuestionCondition;
 
 import com.privatekit.server.repository.*;
@@ -24,10 +25,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 public class SurveyController {
+
+    @Autowired
+    private AppRepository appRepository;
 
     @Autowired
     private SurveyRepository surveyRepository;
@@ -53,6 +58,12 @@ public class SurveyController {
     @GetMapping(value = "/v1.0/{app_namespace}/survey")
     @Transactional
     public @ResponseBody SurveyList getSurveys(@PathVariable("app_namespace") String appNamespace) {
+
+        final Optional<App> app = appRepository.findById_NamespaceAndAndStatus(Integer.parseInt(appNamespace), "APPROVED");
+
+        if (app.isEmpty()) {
+            throw new ResponseStatusException(BAD_REQUEST, "App not approved");
+        }
 
         final SurveyList surveysList = new SurveyList();
 
@@ -107,9 +118,15 @@ public class SurveyController {
     public ResponseEntity<String> postSurvey(@PathVariable("app_namespace") String appNamespace,
                            @Validated @RequestBody Survey survey) {
 
+        final Optional<App> app = appRepository.findById_NamespaceAndAndStatus(Integer.parseInt(appNamespace), "APPROVED");
+
+        if (app.isEmpty()) {
+            throw new ResponseStatusException(BAD_REQUEST, "App not approved");
+        }
+
         final com.privatekit.server.entity.Survey surveyDb = com.privatekit.server.entity.Survey.from(survey);
         surveyDb.setAppNamespace(appNamespace);
-
+        surveyDb.setAppKey(app.get().getId().getKey().toString());
         final Integer surveyId = surveyRepository.save(surveyDb).getId();
 
         // save question

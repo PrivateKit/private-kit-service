@@ -59,8 +59,6 @@ public class Survey implements Serializable {
         survey.setName(s.getName());
         survey.setDescription(s.getDescription());
         survey.setImage(s.getImage());
-        // TODO the API model does not have App Key.
-        survey.setAppKey("FAKE VALUE!");
 
         return survey;
     }
