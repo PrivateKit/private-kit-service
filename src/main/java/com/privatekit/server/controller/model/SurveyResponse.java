@@ -16,7 +16,7 @@ public class SurveyResponse {
     @NotEmpty(message = "question_id is missed")
     private int questionId;
 
-    @JsonProperty(value = "response_value",required = true)
+    @JsonProperty(value = "response",required = true)
     @NotEmpty(message = "response_value list is missed")
     private List<String> responseValue = new ArrayList<>();
 

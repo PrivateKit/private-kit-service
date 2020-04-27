@@ -26,8 +26,8 @@ public class SurveyResponseItem implements Serializable {
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "survey_id", nullable = false),
-            @JoinColumn(name = "question_key", nullable = false)})
+            @JoinColumn(name = "survey_id", referencedColumnName = "survey_id", nullable = false),
+            @JoinColumn(name = "question_key", referencedColumnName = "question_key", nullable = false)})
     private SurveyResponse response;
 
     @Override
