@@ -1,5 +1,6 @@
 package com.privatekit.server.entity;
 
+import com.privatekit.server.controller.model.Option;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,21 @@ public class SurveyOption implements Serializable {
 
     @OneToMany(mappedBy = "option", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<SurveyOptionValue> values;
+
+    public static SurveyOption from(Option option) {
+        final SurveyOption surveyOption = new SurveyOption();
+
+        surveyOption.getId().setOptionKey(option.getKey());
+
+        option.getValues().forEach(v->{
+            SurveyOptionValue value = new SurveyOptionValue();
+            value.setOptionDescription(v.getDescription());
+            value.setOptionLabel(v.getLabel());
+            value.setOptionValue(v.getValue());
+        });
+
+        return surveyOption;
+    }
 
     @Override
     public boolean equals(Object o) {

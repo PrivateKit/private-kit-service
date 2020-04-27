@@ -2,9 +2,12 @@ package com.privatekit.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.privatekit.server.controller.model.*;
-import com.privatekit.server.entity.QuestionId;
-import com.privatekit.server.repository.QuestionRepository;
-import com.privatekit.server.repository.SurveyRepository;
+import com.privatekit.server.controller.model.Question;
+import com.privatekit.server.controller.model.QuestionCondition;
+import com.privatekit.server.controller.model.Survey;
+import com.privatekit.server.controller.model.SurveyResponse;
+import com.privatekit.server.entity.*;
+import com.privatekit.server.repository.*;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +19,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.inject.internal.util.Lists.newArrayList;
 import static org.assertj.core.util.Lists.list;
@@ -36,6 +42,9 @@ public class SurveyControllerTest {
     @Autowired private SurveyRepository surveyRepository;
 
     @Autowired private QuestionRepository questionRepository;
+    @Autowired private QuestionConditionRepository questionConditionRepository;
+    @Autowired private SurveyOptionGroupRepository surveyOptionGroupRepository;
+    @Autowired private OptionRepository optionRepository;
 
     @Autowired private SurveyController surveyController;
 
@@ -50,11 +59,11 @@ public class SurveyControllerTest {
         s.setDescription("Symptoms Checker Survey");
         s.setAppNamespace("myNameSpace");
 
-        com.privatekit.server.entity.Survey save = surveyRepository.save(s);
+        Integer surveyId= surveyRepository.save(s).getId();
 
         final com.privatekit.server.entity.Question q1 = new com.privatekit.server.entity.Question();
         QuestionId id = new QuestionId();
-        id.setSurveyId(save.getId());
+        id.setSurveyId(surveyId);
         id.setQuestionKey("1");
         q1.setOptionKey("option_1");
         q1.setType("MULTI");
@@ -65,6 +74,43 @@ public class SurveyControllerTest {
 
         questionRepository.save(q1);
 
+        insertQuestionCondition(surveyId, "Y", "3", q1.getOptionKey());
+        insertQuestionCondition(surveyId, "N", "2", q1.getOptionKey());
+
+        createSurveyOption(surveyId, q1.getOptionKey(),
+                                Lists.list( Lists.list("Y", "Yes"),
+                                            Lists.list("N", "No"),
+                                            Lists.list("M", "Maybe")));
+
+    }
+
+    private void createSurveyOption(Integer surveyId, String optionKey, List<List<String>> list) {
+        final SurveyOption surveyOption = new SurveyOption();
+        final SurveyOptionId id1 = new SurveyOptionId();
+        id1.setOptionKey(optionKey);
+        id1.setSurveyId(surveyId);
+        surveyOption.setId(id1);
+
+        surveyOption.setValues(list.stream().map(i->{
+            final SurveyOptionValue e = new SurveyOptionValue();
+            e.setOptionValue(i.get(0));
+            e.setOptionLabel(i.get(1));
+            e.setOption(surveyOption);
+            return e;
+        }).collect(Collectors.toSet()));
+
+        optionRepository.save(surveyOption);
+    }
+
+    private void insertQuestionCondition(Integer surveyId, String response,  String jumpToKey, String questionKey) {
+        final com.privatekit.server.entity.QuestionCondition qc = new com.privatekit.server.entity.QuestionCondition();
+        final QuestionConditionId id = new QuestionConditionId();
+        id.setSurveyId(surveyId);
+        id.setQuestionKey(questionKey);
+        id.setResponse(response);
+        qc.setJumpToKey(jumpToKey);
+        qc.setId(id);
+        questionConditionRepository.save(qc);
     }
 
 
@@ -88,7 +134,12 @@ public class SurveyControllerTest {
         assertEquals("Symptoms Checker Survey", survey.getName());
         assertEquals("Symptoms Checker Survey", survey.getDescription());
         assertFalse(survey.getQuestions().isEmpty());
-        //assertFalse(survey.getOptions().isEmpty());
+
+        final Question question = survey.getQuestions().get(0);
+
+        assertFalse(question.getConditions().isEmpty());
+
+        assertTrue(survey.getOptions().isEmpty());
     }
 
     @Test

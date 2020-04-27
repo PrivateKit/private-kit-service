@@ -4,12 +4,11 @@ import com.privatekit.server.controller.model.Question;
 import com.privatekit.server.controller.model.Survey;
 import com.privatekit.server.controller.model.SurveyList;
 import com.privatekit.server.controller.model.SurveyResponse;
-import com.privatekit.server.entity.QuestionId;
-import com.privatekit.server.entity.SurveyResponseId;
-import com.privatekit.server.entity.SurveyResponseItem;
+import com.privatekit.server.entity.*;
 import com.privatekit.server.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -38,6 +38,9 @@ public class SurveyController {
     private OptionRepository optionRepository;
 
     @Autowired
+    private SurveyOptionGroupRepository surveyOptionGroupRepository;
+
+    @Autowired
     private ResponseRepository responseRepository;
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey")
@@ -54,64 +57,34 @@ public class SurveyController {
             final Collection<com.privatekit.server.entity.Question> questions = questionRepository.findBySurveyId(s.getId());
 
             //collect questions
-            questions.forEach(q-> survey.getQuestions().add(Question.from(q)));
+            questions.forEach(q-> {
+                final Question question = Question.from(q);
+                survey.getQuestions().add(question);
 
-            //optionRepository.findById(s.getId())
+                final Collection<QuestionCondition> list = questionConditionRepository.findById_SurveyIdAndId_QuestionKey(q.getSurveyId(), q.getOptionKey());
+
+                question.getConditions()
+                        .addAll(list.stream()
+                                .map(i-> com.privatekit.server.controller.model.QuestionCondition.create(i.getId().getResponse(), i.getJumpToKey()))
+                                .collect(Collectors.toList()));
+
+            });
 
             //collect options
+
             //collect screenTypes
 
             surveysList.addSurvey(survey);
         });
 
         return surveysList;
-//        // ---------
-//        // Mock Data
-//        // ---------
-//
-//        final Survey survey = new Survey();
-//        survey.setName("Symptoms Checker Survey");
-//
-//        final Question q1 = new Question();
-//
-//        q1.setQuestionKey("1");
-//        q1.setQuestionText("Select your symptoms?");
-//        q1.setQuestionType("MULTI");
-//        q1.setRequired(true);
-//        q1.setScreenType("Checkbox");
-//        q1.setOptionKey("option_1");
-//
-//        q1.getConditions().addAll(Lists.newArrayList(QuestionCondition.create("Y", "3"), QuestionCondition.create("N", "2")));
-//
-//
-//        final Question q2 = new Question();
-//        q2.setQuestionKey("2");
-//        q2.setQuestionType("END");
-//
-//        final Question q3 = new Question();
-//        q3.setQuestionKey("3");
-//        q3.setQuestionType("END");
-//
-//        survey.getQuestions().add(q1);
-//        survey.getQuestions().add(q2);
-//        survey.getQuestions().add(q3);
-//
-//        final Option opt1 = new Option();
-//        opt1.setKey("option_1");
-//        opt1.setValues(Lists.newArrayList(OptionValue.create("Yes", "Y"), OptionValue.create("No", "N"), OptionValue.create("Maybe", "M")));
-//
-//        survey.getOptions().add(opt1);
-//
-//        survey.getScreenTypes().put("Checkbox", "911");
-//
-//        surveysList.addSurvey(survey);
     }
 
     @PostMapping(value = "/v1.0/{app_namespace}/survey",
             consumes={MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @Transactional
-    public void postSurvey(@PathVariable("app_namespace") String appNamespace,
+    public ResponseEntity<String> postSurvey(@PathVariable("app_namespace") String appNamespace,
                            @Validated @RequestBody Survey survey) {
 
         final com.privatekit.server.entity.Survey surveyDb = com.privatekit.server.entity.Survey.from(survey);
@@ -139,9 +112,25 @@ public class SurveyController {
             });
         });
 
+//        // save options
+//        survey.getOptions().forEach(o-> {
+//
+//            final SurveyOptionGroup surveyOptionGroup = new SurveyOptionGroup();
+//            surveyOptionGroup.setName(o.getKey());
+//
+//            final Integer groupId = surveyOptionGroupRepository.save(surveyOptionGroup).getId();
+//
+//            final com.privatekit.server.entity.SurveyOption surveyOption = com.privatekit.server.entity.SurveyOption.from(o);
+//            surveyOption.setOptionGroupId(groupId);
+//            surveyOption.getId().setSurveyId(surveyId);
+//
+//            optionRepository.save(surveyOption);
+//        });
 
-        // save options
+
         // save screenTypes
+
+        return ResponseEntity.ok("survey was created successfully");
 
     }
 
