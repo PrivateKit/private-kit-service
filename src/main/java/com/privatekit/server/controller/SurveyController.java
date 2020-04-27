@@ -179,7 +179,7 @@ public class SurveyController {
             q.getConditions().forEach(qc -> {
                 final com.privatekit.server.entity.QuestionCondition questionConditionDb = com.privatekit.server.entity.QuestionCondition.from(qc);
                 questionConditionDb.getId().setSurveyId(surveyId);
-                questionConditionDb.getId().setQuestionKey(q.getOptionKey());
+                questionConditionDb.getId().setQuestionKey(q.getQuestionKey());
                 questionConditionDb.getId().setResponse(qc.getResponse());
                 questionConditionRepository.save(questionConditionDb);
             });
