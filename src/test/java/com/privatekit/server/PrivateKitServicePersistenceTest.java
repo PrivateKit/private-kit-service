@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,6 +17,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -63,9 +63,6 @@ public class PrivateKitServicePersistenceTest {
     private static final String OPTION_LABEL_EXAMPLE2 = "No";
 
     private static final String OPTION_VALUE_EXAMPLE2 = "N";
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     @Autowired
     private SurveyRepository surveyRepository;
@@ -127,12 +124,14 @@ public class PrivateKitServicePersistenceTest {
     @Test
     public void testBasicResponsePersistenceShouldWork() {
         final Survey persisted = surveyRepository.save(surveyToTest);
-        final Set<SurveyResponseItem> items = new HashSet<SurveyResponseItem>();
+        final Set<SurveyResponseItem> items = new HashSet<>();
         final SurveyResponseId id = buildResponseId(persisted);
         final SurveyResponse response = buildResponse(items, id);
         responseRepository.save(response);
         final Optional<SurveyResponse> maybeSurvey = responseRepository.findById(id);
         assertThat(maybeSurvey.isPresent()).isTrue();
+        
+        assertTrue(maybeSurvey.isPresent());
         assertThat(maybeSurvey.get()).isEqualTo(response);
         assertThat(maybeSurvey.get().getItems().size()).isEqualTo(2);
     }
@@ -215,7 +214,7 @@ public class PrivateKitServicePersistenceTest {
         id.setOptionKey(OPTION_KEY_EXAMPLE1);
         id.setSurveyId(persisted.getId());
         final SurveyOption option = new SurveyOption();
-        final Set<SurveyOptionValue> values = new HashSet<SurveyOptionValue>();
+        final Set<SurveyOptionValue> values = new HashSet<>();
         values.add(new SurveyOptionValue(OPTION_LABEL_EXAMPLE1, OPTION_VALUE_EXAMPLE1, OPTION_DESC_EXAMPLE1, option));
         values.add(new SurveyOptionValue(OPTION_LABEL_EXAMPLE2, OPTION_VALUE_EXAMPLE2, null, option));
         option.setId(id);
