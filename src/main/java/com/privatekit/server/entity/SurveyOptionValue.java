@@ -31,8 +31,8 @@ public class SurveyOptionValue implements Serializable {
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "survey_id", nullable = false),
-            @JoinColumn(name = "option_key", nullable = false)})
+            @JoinColumn(name = "survey_id", nullable = false, referencedColumnName = "survey_id"),
+            @JoinColumn(name = "option_key", nullable = false, referencedColumnName = "option_key")})
     private SurveyOption option;
 
     public SurveyOptionValue() {
