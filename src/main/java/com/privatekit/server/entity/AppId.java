@@ -14,10 +14,10 @@ import java.util.Objects;
 public class AppId implements Serializable {
 
     @Column(name = "app_namespace")
-    private Integer namespace;
+    private String namespace;
 
     @Column(name = "app_key")
-    private Integer key;
+    private String key;
 
     @Override
     public boolean equals(Object o) {

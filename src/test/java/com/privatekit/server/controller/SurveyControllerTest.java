@@ -6,11 +6,10 @@ import com.privatekit.server.controller.model.QuestionCondition;
 import com.privatekit.server.controller.model.Survey;
 import com.privatekit.server.controller.model.SurveyResponse;
 import com.privatekit.server.controller.model.*;
-import com.privatekit.server.entity.*;
 import com.privatekit.server.entity.App;
+import com.privatekit.server.entity.*;
 import com.privatekit.server.repository.*;
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +54,8 @@ public class SurveyControllerTest {
 
         mockMvc             = standaloneSetup(surveyController).build();
 
-        createApp(123456, 1234);
-        createApp(4567, 4567);
+        createApp("123456", "1234");
+        createApp("4567", "4567");
 
         final com.privatekit.server.entity.Survey s = new com.privatekit.server.entity.Survey();
         s.setAppKey("123456");
@@ -109,11 +108,11 @@ public class SurveyControllerTest {
 
     }
 
-    private void createApp(int i, int i2) {
+    private void createApp(String key, String namespace) {
         final App app = new App();
         AppId appId = new AppId();
-        appId.setKey(i);
-        appId.setNamespace(i2);
+        appId.setKey(key);
+        appId.setNamespace(namespace);
         app.setId(appId);
         app.setStatus("APPROVED");
         appRepository.save(app);

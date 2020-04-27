@@ -59,7 +59,7 @@ public class SurveyController {
     @Transactional
     public @ResponseBody SurveyList getSurveys(@PathVariable("app_namespace") String appNamespace) {
 
-        final Optional<App> app = appRepository.findById_NamespaceAndAndStatus(Integer.parseInt(appNamespace), "APPROVED");
+        final Optional<App> app = appRepository.findById_NamespaceAndAndStatus(appNamespace, "APPROVED");
 
         if (app.isEmpty()) {
             throw new ResponseStatusException(BAD_REQUEST, "App not approved");
@@ -118,7 +118,7 @@ public class SurveyController {
     public ResponseEntity<String> postSurvey(@PathVariable("app_namespace") String appNamespace,
                            @Validated @RequestBody Survey survey) {
 
-        final Optional<App> app = appRepository.findById_NamespaceAndAndStatus(Integer.parseInt(appNamespace), "APPROVED");
+        final Optional<App> app = appRepository.findById_NamespaceAndAndStatus(appNamespace, "APPROVED");
 
         if (app.isEmpty()) {
             throw new ResponseStatusException(BAD_REQUEST, "App not approved");
