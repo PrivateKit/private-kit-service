@@ -85,9 +85,6 @@ public class PrivateKitServicePersistenceTest {
     @Autowired
     private SurveyScreenTypeRepository surveyScreenTypeRepository;
 
-    @Autowired
-    private SurveyOptionGroupRepository surveyOptionGroupRepository;
-
     private Survey surveyToTest;
 
     @BeforeEach
@@ -240,9 +237,6 @@ public class PrivateKitServicePersistenceTest {
         final SurveyOption option = buildOption(persisted);
         final Question question = buildQuestion(persisted);
         final QuestionCondition condition = buildCondition(persisted);
-        final SurveyOptionGroup group = new SurveyOptionGroup();
-        group.setId(option.getId().getOptionKey());
-        final SurveyOptionGroup optionGroupPersisted = surveyOptionGroupRepository.save(group);
         final SurveyOption optionPersisted = optionRepository.save(option);
         final ScreenType screenType1 = new ScreenType();
         screenType1.setId(QUESTION_SCREEN_TYPE_EXAMPLE1);
@@ -265,7 +259,6 @@ public class PrivateKitServicePersistenceTest {
         final Question questionPersisted = questionRepository.save(question);
         final QuestionCondition conditionPersisted = questionConditionRepository.save(condition);
         assertThat(option).isEqualTo(optionPersisted);
-        assertThat(group).isEqualTo(optionGroupPersisted);
         assertThat(question).isEqualTo(questionPersisted);
         assertThat(condition).isEqualTo(conditionPersisted);
         assertThat(screenTypePersisted1).isEqualTo(screenType1);

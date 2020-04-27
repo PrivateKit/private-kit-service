@@ -1,14 +1,12 @@
 package com.privatekit.server.controller;
 
-import com.privatekit.server.controller.model.*;
 import com.privatekit.server.controller.model.Question;
 import com.privatekit.server.controller.model.Survey;
 import com.privatekit.server.controller.model.SurveyResponse;
-import com.privatekit.server.entity.*;
-
+import com.privatekit.server.controller.model.*;
 import com.privatekit.server.entity.App;
+import com.privatekit.server.entity.*;
 import com.privatekit.server.entity.QuestionCondition;
-
 import com.privatekit.server.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -57,7 +55,8 @@ public class SurveyController {
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey")
     @Transactional
-    public @ResponseBody SurveyList getSurveys(@PathVariable("app_namespace") String appNamespace) {
+    public @ResponseBody
+    SurveyList getSurveys(@PathVariable("app_namespace") String appNamespace) {
 
         final Optional<App> app = appRepository.findById_NamespaceAndAndStatus(appNamespace, "APPROVED");
 
@@ -75,7 +74,7 @@ public class SurveyController {
             final Collection<com.privatekit.server.entity.Question> questions = questionRepository.findBySurveyId(s.getId());
 
             //collect questions
-            questions.forEach(q-> {
+            questions.forEach(q -> {
                 final Question question = Question.from(q);
                 survey.getQuestions().add(question);
 
@@ -83,7 +82,7 @@ public class SurveyController {
 
                 question.getConditions()
                         .addAll(list.stream()
-                                .map(i-> com.privatekit.server.controller.model.QuestionCondition.create(i.getId().getResponse(), i.getJumpToKey()))
+                                .map(i -> com.privatekit.server.controller.model.QuestionCondition.create(i.getId().getResponse(), i.getJumpToKey()))
                                 .collect(Collectors.toList()));
 
             });
@@ -96,14 +95,14 @@ public class SurveyController {
                 final Option option = new Option();
                 option.setKey(so.getId().getOptionKey());
 
-                values.forEach(v-> option.getValues().add(OptionValue.from(v)));
+                values.forEach(v -> option.getValues().add(OptionValue.from(v)));
 
                 survey.getOptions().add(option);
             }
 
             //collect screenTypes
             final Collection<SurveyScreenType> screenTypes = surveyScreenTypeRepository.findById_SurveyId(s.getId());
-            screenTypes.forEach(st-> survey.getScreenTypes().add(st.getId().getScreenTypeKey()));
+            screenTypes.forEach(st -> survey.getScreenTypes().add(st.getId().getScreenTypeKey()));
 
             surveysList.addSurvey(survey);
         });
@@ -112,11 +111,11 @@ public class SurveyController {
     }
 
     @PostMapping(value = "/v1.0/{app_namespace}/survey",
-            consumes={MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @Transactional
     public ResponseEntity<String> postSurvey(@PathVariable("app_namespace") String appNamespace,
-                           @Validated @RequestBody Survey survey) {
+                                             @Validated @RequestBody Survey survey) {
 
         final Optional<App> app = appRepository.findById_NamespaceAndAndStatus(appNamespace, "APPROVED");
 
@@ -130,7 +129,7 @@ public class SurveyController {
         final Integer surveyId = surveyRepository.save(surveyDb).getId();
 
         // save options
-        survey.getOptions().forEach(o-> {
+        survey.getOptions().forEach(o -> {
 
             final com.privatekit.server.entity.SurveyOption surveyOption = com.privatekit.server.entity.SurveyOption.from(o);
 
@@ -141,7 +140,7 @@ public class SurveyController {
 
         // save screenTypes
 
-        survey.getScreenTypes().forEach(  st-> {
+        survey.getScreenTypes().forEach(st -> {
             final ScreenType screenType = new ScreenType();
             screenType.setId(st);
 
@@ -157,7 +156,7 @@ public class SurveyController {
         });
 
         // save question
-        survey.getQuestions().forEach(q->{
+        survey.getQuestions().forEach(q -> {
 
             final com.privatekit.server.entity.Question questionDb = com.privatekit.server.entity.Question.from(q);
 
@@ -165,14 +164,16 @@ public class SurveyController {
 
             final QuestionId questionId = questionRepository.save(questionDb).getId();
 
-            q.getConditions().forEach(qc ->{
+        });
 
-                final com.privatekit.server.entity.QuestionCondition questionConditionDb =  com.privatekit.server.entity.QuestionCondition.from(qc);
-                questionConditionDb.getId().setSurveyId(questionId.getSurveyId());
-                questionConditionDb.getId().setQuestionKey(questionId.getQuestionKey());
+        // save question conditions
+        survey.getQuestions().forEach(q -> {
+            q.getConditions().forEach(qc -> {
+                final com.privatekit.server.entity.QuestionCondition questionConditionDb = com.privatekit.server.entity.QuestionCondition.from(qc);
+                questionConditionDb.getId().setSurveyId(surveyId);
+                questionConditionDb.getId().setQuestionKey(q.getQuestionKey());
                 questionConditionDb.getId().setResponse(qc.getResponse());
                 questionConditionRepository.save(questionConditionDb);
-
             });
         });
 
@@ -181,7 +182,7 @@ public class SurveyController {
     }
 
     @PostMapping(value = "/v1.0/{app_namespace}/survey/{survey_id}/response",
-            consumes={MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @Transactional
     public void addSurveyResponse(@PathVariable("app_namespace") String appNamespace,
@@ -194,7 +195,7 @@ public class SurveyController {
             throw new ResponseStatusException(NOT_FOUND, "Survey not found");
         }
 
-        surveyResponses.forEach(i ->{
+        surveyResponses.forEach(i -> {
             final com.privatekit.server.entity.SurveyResponse sr = new com.privatekit.server.entity.SurveyResponse();
 
             final List<String> values = i.getResponseValue();
@@ -209,7 +210,7 @@ public class SurveyController {
             sr.setId(id);
             sr.setSkipped(i.isSkkiped());
 
-            sr.setItems(values.stream().map(v-> {
+            sr.setItems(values.stream().map(v -> {
                 final SurveyResponseItem surveyResponseItem = new SurveyResponseItem();
                 surveyResponseItem.setValue(v);
                 surveyResponseItem.setResponse(sr);

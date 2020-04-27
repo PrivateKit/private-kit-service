@@ -16,16 +16,10 @@ CREATE TABLE surveys(
  );
 
 CREATE TABLE survey_option_groups(
-  option_group_id varchar(80) PRIMARY KEY,
-  option_group_name varchar(45)
-);
-
-CREATE TABLE survey_options(
   survey_id int not null,
   option_key varchar(80) not null,
   PRIMARY KEY (survey_id, option_key),
-  FOREIGN KEY (survey_id) REFERENCES surveys (id),
-  FOREIGN KEY (option_key) REFERENCES survey_option_groups (option_group_id)
+  FOREIGN KEY (survey_id) REFERENCES surveys (id)
 );
 
 CREATE TABLE survey_option_values(
@@ -35,7 +29,7 @@ CREATE TABLE survey_option_values(
   option_label varchar(80) not null,
   option_value varchar(80) not null,
   option_description varchar(255),
-  FOREIGN KEY (survey_id, option_key) REFERENCES survey_options (survey_id, option_key)
+  FOREIGN KEY (survey_id, option_key) REFERENCES survey_option_groups (survey_id, option_key)
 );
 
 
@@ -63,7 +57,7 @@ CREATE TABLE questions(
   option_key varchar(80),
   PRIMARY KEY (survey_id, question_key),
   FOREIGN KEY (survey_id) REFERENCES surveys (id),
-  FOREIGN KEY (survey_id, option_key) REFERENCES survey_options (survey_id, option_key),
+  FOREIGN KEY (survey_id, option_key) REFERENCES survey_option_groups (survey_id, option_key),
   FOREIGN KEY (screen_type_key) REFERENCES screen_types (screen_type_key)
 );
 

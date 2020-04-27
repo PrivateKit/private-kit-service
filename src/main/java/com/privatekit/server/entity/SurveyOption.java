@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @Entity
-@Table(name = "survey_options")
+@Table(name = "survey_option_groups")
 public class SurveyOption implements Serializable {
 
     private static final long serialVersionUID = 6203941080989251006L;
