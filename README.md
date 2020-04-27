@@ -1,6 +1,6 @@
 # Private Kit Service
-![Build and Tests](https://github.com/imanzano/private-kit-service/workflows/Build%20and%20Tests/badge.svg)(https://github.com/imanzano/private-kit-service/actions?query=workflow%3A%22Build+and+Tests%22)
-![Docker Image CI](https://github.com/imanzano/private-kit-service/workflows/Docker%20Image%20CI/badge.svg)(https://github.com/imanzano/private-kit-service/actions?query=workflow%3A%22Docker+Image+CI%22)
+![[Build and Tests](https://github.com/imanzano/private-kit-service/workflows/Build%20and%20Tests/badge.svg)](https://github.com/imanzano/private-kit-service/actions?query=workflow%3A%22Build+and+Tests%22)
+![[Docker Image CI](https://github.com/imanzano/private-kit-service/workflows/Docker%20Image%20CI/badge.svg)](https://github.com/imanzano/private-kit-service/actions?query=workflow%3A%22Docker+Image+CI%22)
 
 An `mvn` wrapper is bundled.
 
