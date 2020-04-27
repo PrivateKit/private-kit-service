@@ -25,8 +25,11 @@ public class SurveyOption implements Serializable {
 
     public static SurveyOption from(Option option) {
         final SurveyOption surveyOption = new SurveyOption();
+        final SurveyOptionId id = new SurveyOptionId();
 
-        surveyOption.getId().setOptionKey(option.getKey());
+        id.setOptionKey(option.getKey());
+
+        surveyOption.setId(id);
 
         option.getValues().forEach(v->{
             SurveyOptionValue value = new SurveyOptionValue();

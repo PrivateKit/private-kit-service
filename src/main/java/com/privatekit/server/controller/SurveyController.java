@@ -1,10 +1,13 @@
 package com.privatekit.server.controller;
 
+import com.privatekit.server.controller.model.*;
 import com.privatekit.server.controller.model.Question;
 import com.privatekit.server.controller.model.Survey;
-import com.privatekit.server.controller.model.SurveyList;
 import com.privatekit.server.controller.model.SurveyResponse;
 import com.privatekit.server.entity.*;
+
+import com.privatekit.server.entity.QuestionCondition;
+
 import com.privatekit.server.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -38,7 +42,7 @@ public class SurveyController {
     private OptionRepository optionRepository;
 
     @Autowired
-    private SurveyOptionGroupRepository surveyOptionGroupRepository;
+    private ScreenTypeRepository screenTypeRepository;
 
     @Autowired
     private ResponseRepository responseRepository;
@@ -71,6 +75,17 @@ public class SurveyController {
             });
 
             //collect options
+            final Optional<SurveyOption> surveyOption = optionRepository.findById_SurveyId(s.getId());
+            if (surveyOption.isPresent()) {
+                final SurveyOption so = surveyOption.get();
+                final Set<SurveyOptionValue> values = so.getValues();
+                final Option option = new Option();
+                option.setKey(so.getId().getOptionKey());
+
+                values.forEach(v-> option.getValues().add(OptionValue.from(v)));
+
+                survey.getOptions().add(option);
+            }
 
             //collect screenTypes
 
@@ -112,20 +127,15 @@ public class SurveyController {
             });
         });
 
-//        // save options
-//        survey.getOptions().forEach(o-> {
-//
-//            final SurveyOptionGroup surveyOptionGroup = new SurveyOptionGroup();
-//            surveyOptionGroup.setName(o.getKey());
-//
-//            final Integer groupId = surveyOptionGroupRepository.save(surveyOptionGroup).getId();
-//
-//            final com.privatekit.server.entity.SurveyOption surveyOption = com.privatekit.server.entity.SurveyOption.from(o);
-//            surveyOption.setOptionGroupId(groupId);
-//            surveyOption.getId().setSurveyId(surveyId);
-//
-//            optionRepository.save(surveyOption);
-//        });
+        // save options
+        survey.getOptions().forEach(o-> {
+
+            final com.privatekit.server.entity.SurveyOption surveyOption = com.privatekit.server.entity.SurveyOption.from(o);
+
+            surveyOption.getId().setSurveyId(surveyId);
+
+            optionRepository.save(surveyOption);
+        });
 
 
         // save screenTypes

@@ -1,6 +1,7 @@
 package com.privatekit.server.controller.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.privatekit.server.entity.SurveyOptionValue;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,5 +27,13 @@ public class OptionValue {
 
     public static OptionValue create(String l, String v) {
         return create(l, v, "");
+    }
+
+    public static OptionValue from(SurveyOptionValue v) {
+        final OptionValue optionValue = new OptionValue();
+        optionValue.setDescription(v.getOptionDescription());
+        optionValue.setLabel(v.getOptionLabel());
+        optionValue.setValue(v.getOptionValue());
+        return optionValue;
     }
 }

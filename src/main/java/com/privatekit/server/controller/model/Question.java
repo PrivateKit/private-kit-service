@@ -44,7 +44,7 @@ public class Question {
     public static Question from(com.privatekit.server.entity.Question s) {
 
         final Question question = new Question();
-        question.setQuestionKey(s.getId().getQuestionKey().toString()); // TODO @marcos
+        question.setQuestionKey(s.getId().getQuestionKey());
         question.setQuestionType(s.getType());
         question.setOptionKey(s.getOptionKey());
         question.setQuestionText(s.getText());

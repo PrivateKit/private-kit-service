@@ -9,6 +9,7 @@ import com.privatekit.server.controller.model.SurveyResponse;
 import com.privatekit.server.entity.*;
 import com.privatekit.server.repository.*;
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -139,7 +139,7 @@ public class SurveyControllerTest {
 
         assertFalse(question.getConditions().isEmpty());
 
-        assertTrue(survey.getOptions().isEmpty());
+        assertFalse(survey.getOptions().isEmpty());
     }
 
     @Test
@@ -236,8 +236,8 @@ public class SurveyControllerTest {
 
     private Survey createMockSurvey() {
         final Survey survey = new Survey();
-        survey.setName("Symptoms Checker Survey");
-        survey.setDescription("Symptoms Checker Survey");
+        survey.setName("Symptoms Checker Survey 2");
+        survey.setDescription("Symptoms Checker Survey 2");
         final Question q1 = new Question();
 
         q1.setQuestionKey("1");
