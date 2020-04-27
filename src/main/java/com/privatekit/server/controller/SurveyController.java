@@ -126,7 +126,7 @@ public class SurveyController {
 
         final com.privatekit.server.entity.Survey surveyDb = com.privatekit.server.entity.Survey.from(survey);
         surveyDb.setAppNamespace(appNamespace);
-        surveyDb.setAppKey(app.get().getId().getKey().toString());
+        surveyDb.setAppKey(app.get().getId().getKey());
         final Integer surveyId = surveyRepository.save(surveyDb).getId();
 
         // save question
@@ -158,7 +158,6 @@ public class SurveyController {
 
             optionRepository.save(surveyOption);
         });
-
 
         // save screenTypes
 
