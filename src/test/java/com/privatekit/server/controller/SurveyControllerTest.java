@@ -218,10 +218,10 @@ public class SurveyControllerTest {
     void testPostSurveyResponse() throws Exception
     {
 
-        final com.privatekit.server.entity.Survey survey = surveyRepository.findByAppNamespace("myNameSpace").iterator().next();
+        final com.privatekit.server.entity.Survey survey = surveyRepository.findByAppNamespace("myNewNameSpace").iterator().next();
         final SurveyResponse response = SurveyResponse.create(1234, list("Great"), true);
 
-        mockMvc.perform(post(String.format("/v1.0/%s/survey/%d/response","myNameSpace", survey.getId()))
+        mockMvc.perform(post(String.format("/v1.0/%s/survey/%d/response","myNewNameSpace", survey.getId()))
                 .content(asJsonString(Lists.list(response)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
