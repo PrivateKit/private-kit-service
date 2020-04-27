@@ -78,8 +78,8 @@ public class SurveyControllerTest {
 
         questionRepository.save(q1);
 
-        insertQuestionCondition(surveyId, "Y", "3", q1.getOptionKey());
-        insertQuestionCondition(surveyId, "N", "2", q1.getOptionKey());
+        insertQuestionCondition(surveyId, "Y", "3", q1.getId().getQuestionKey());
+        insertQuestionCondition(surveyId, "N", "2", q1.getId().getQuestionKey());
 
         createSurveyOption(surveyId, q1.getOptionKey(),
                                 Lists.list( Lists.list("Y", "Yes"),

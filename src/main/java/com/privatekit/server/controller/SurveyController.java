@@ -86,7 +86,7 @@ public class SurveyController {
                 final Question question = Question.from(q);
                 survey.getQuestions().add(question);
 
-                final Collection<QuestionCondition> list = questionConditionRepository.findById_SurveyIdAndId_QuestionKey(q.getSurveyId(), q.getOptionKey());
+                final Collection<QuestionCondition> list = questionConditionRepository.findById_SurveyIdAndId_QuestionKey(q.getSurveyId(), q.getId().getQuestionKey());
 
                 question.getConditions()
                         .addAll(list.stream()
