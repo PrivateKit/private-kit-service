@@ -1,54 +1,89 @@
-CREATE TABLE input_types(
-  id SERIAL PRIMARY KEY,
-  input_type_name varchar(80) NOT NULL
+CREATE TABLE apps(
+  app_namespace varchar(80) not null,
+  app_key varchar(80) not null,
+  app_status varchar(80) not null,
+  PRIMARY KEY (app_namespace, app_key)
  );
 
-CREATE TABLE option_groups(
+CREATE TABLE surveys(
   id SERIAL PRIMARY KEY,
-  option_group_name varchar(45) NOT NULL
+  survey_name varchar(80) not null,
+  survey_description varchar(255),
+  survey_image varchar(255),
+  app_namespace varchar(80) not null,
+  app_key varchar(80) not null,
+  FOREIGN KEY (app_namespace, app_key) REFERENCES apps (app_namespace, app_key)
  );
 
-CREATE TABLE unit_of_measures(
-  id SERIAL PRIMARY KEY,
-  unit_of_measures_name varchar(80) NOT NULL
- );
+CREATE TABLE survey_option_groups(
+  survey_id int not null,
+  option_key varchar(80) not null,
+  PRIMARY KEY (survey_id, option_key),
+  FOREIGN KEY (survey_id) REFERENCES surveys (id)
+);
 
-CREATE TABLE option_choices(
+CREATE TABLE survey_option_values(
   id SERIAL PRIMARY KEY,
-  option_group_id int NOT NULL,
-  option_choice_name varchar(45) NOT NULL,
-  FOREIGN KEY (option_group_id) REFERENCES option_groups (id)
- );
+  survey_id int not null,
+  option_key varchar(80) not null,
+  option_label varchar(80) not null,
+  option_value varchar(80) not null,
+  option_description varchar(255),
+  FOREIGN KEY (survey_id, option_key) REFERENCES survey_option_groups (survey_id, option_key)
+);
+
+
+CREATE TABLE screen_types(
+	screen_type_key varchar(80) PRIMARY KEY,
+	screen_type_description varchar(255)
+);
+
+CREATE TABLE survey_screen_types(
+	screen_type_key varchar(80) not null,
+	survey_id int not null,
+	PRIMARY KEY (screen_type_key, survey_id),
+	FOREIGN KEY (survey_id) REFERENCES surveys (id),
+	FOREIGN KEY (screen_type_key) REFERENCES screen_types (screen_type_key)
+);
 
 CREATE TABLE questions(
-  id SERIAL PRIMARY KEY,
-  survey_section_id int NOT NULL,
-  input_type_id int NOT NULL,
-  question_name varchar(255) NOT NULL,
-  question_subtext varchar(500),
-  answer_required_yn boolean,
-  option_group_id int,
-  allow_multiple_option_answers_yn boolean,
-  FOREIGN KEY (input_type_id) REFERENCES input_types (id),
-  FOREIGN KEY (option_group_id) REFERENCES option_groups (id)
- );
+  survey_id int not null,
+  question_key varchar(80) not null,
+  question_text varchar(500),
+  question_image varchar(255),
+  question_type varchar(80) not null,
+  question_required boolean,
+  screen_type_key varchar(80),
+  option_key varchar(80),
+  PRIMARY KEY (survey_id, question_key),
+  FOREIGN KEY (survey_id) REFERENCES surveys (id),
+  FOREIGN KEY (survey_id, option_key) REFERENCES survey_option_groups (survey_id, option_key),
+  FOREIGN KEY (screen_type_key) REFERENCES screen_types (screen_type_key)
+);
 
-CREATE TABLE question_options(
-  id SERIAL PRIMARY KEY,
-  question_id int NOT NULL,
-  option_choice_id int NOT NULL,
-  FOREIGN KEY (question_id) REFERENCES questions (id),
-  FOREIGN KEY (option_choice_id) REFERENCES option_choices (id)
- );
+CREATE TABLE question_conditions(
+  response varchar(80) not null,
+  survey_id int not null,
+  question_key varchar(80) not null,
+  jump_to_key varchar(80) not null,
+  PRIMARY KEY (response, survey_id, question_key),
+  FOREIGN KEY (survey_id, question_key) REFERENCES questions (survey_id, question_key),
+  FOREIGN KEY (survey_id, jump_to_key) REFERENCES questions (survey_id, question_key)
+);
 
-CREATE TABLE answers(
+
+CREATE TABLE survey_responses(
+  survey_id int not null,
+  question_key varchar(80) not null,
+  skipped boolean not null,
+  PRIMARY KEY (survey_id, question_key),
+  FOREIGN KEY (survey_id, question_key) REFERENCES questions (survey_id, question_key)
+);
+
+CREATE TABLE survey_item_responses(
   id SERIAL PRIMARY KEY,
-  user_id int NOT NULL,
-  question_option_id int NOT NULL,
-  answer_numeric int,
-  answer_text varchar(255),
-  answer_yn boolean,
-  unit_of_measure_id int,
-  FOREIGN KEY (question_option_id) REFERENCES question_options (id),
-  FOREIGN KEY (unit_of_measure_id) REFERENCES unit_of_measures (id)
- );
+  survey_id int not null,
+  question_key varchar(80) not null,
+  survey_item_response_value varchar(255) not null,
+  FOREIGN KEY (survey_id, question_key) REFERENCES survey_responses (survey_id, question_key)
+);
