@@ -1,12 +1,12 @@
 package com.privatekit.server.controller;
 
 import com.privatekit.server.controller.model.Survey;
+import com.privatekit.server.controller.model.SurveyList;
 import com.privatekit.server.controller.model.SurveyResponse;
-import com.privatekit.server.controller.model.*;
 import com.privatekit.server.entity.App;
-import com.privatekit.server.repository.*;
+import com.privatekit.server.repository.AppRepository;
+import com.privatekit.server.repository.SurveyRepository;
 import com.privatekit.server.services.SurveyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +25,17 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestController
 public class SurveyController {
 
-    @Autowired
-    private AppRepository appRepository;
+    private final AppRepository appRepository;
 
-    @Autowired
-    private SurveyRepository surveyRepository;
+    private final SurveyRepository surveyRepository;
 
-    @Autowired
-    private SurveyService surveyService;
+    private final SurveyService surveyService;
+
+    public SurveyController(AppRepository appRepository, SurveyRepository surveyRepository, SurveyService surveyService) {
+        this.appRepository = appRepository;
+        this.surveyRepository = surveyRepository;
+        this.surveyService = surveyService;
+    }
 
     @ExceptionHandler({ PersistenceException.class})
     public ResponseEntity<Object> handleException() {
