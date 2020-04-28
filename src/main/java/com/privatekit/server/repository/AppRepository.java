@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface AppRepository extends CrudRepository<App, AppId> {
 
-    Optional<App> findById_NamespaceAndAndStatus(String namespace, String status);
+    Optional<App> findById_NamespaceAndStatus(String namespace, String status);
 }

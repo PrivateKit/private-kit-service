@@ -20,13 +20,13 @@ public class SurveyResponse {
     @NotEmpty(message = "response_value list is missed")
     private List<String> responseValue = new ArrayList<>();
 
-    private boolean skkiped;
+    private boolean skipped;
 
-    public static SurveyResponse create(int questionId, List<String> responseValue, boolean skkiped) {
+    public static SurveyResponse create(int questionId, List<String> responseValue, boolean skipped) {
         final SurveyResponse r = new SurveyResponse();
         r.questionId = questionId;
         r.responseValue.addAll(responseValue);
-        r.skkiped = skkiped;
+        r.skipped = skipped;
         return r;
     }
 }

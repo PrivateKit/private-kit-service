@@ -156,7 +156,7 @@ public class SurveyService {
 
             id.setQuestionKey(Integer.toString(i.getQuestionId()));
             sr.setId(id);
-            sr.setSkipped(i.isSkkiped());
+            sr.setSkipped(i.isSkipped());
 
             sr.setItems(values.stream().map(v -> {
                 final SurveyResponseItem surveyResponseItem = new SurveyResponseItem();

@@ -117,7 +117,7 @@ public class SurveyController {
 
 
     private App resolveApplicationApproved(String appNamespace) {
-        final Optional<App> app = appRepository.findById_NamespaceAndAndStatus(appNamespace, "APPROVED");
+        final Optional<App> app = appRepository.findById_NamespaceAndStatus(appNamespace, "APPROVED");
 
         if (app.isEmpty()) {
             throw new ResponseStatusException(BAD_REQUEST, "App not approved");
