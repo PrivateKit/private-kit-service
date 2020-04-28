@@ -1,7 +1,8 @@
 # Private Kit Service
-![CD](https://github.com/imanzano/private-kit-service/workflows/Build%20and%20Tests/badge.svg)
+![Build and Tests](https://github.com/imanzano/private-kit-service/workflows/Build%20and%20Tests/badge.svg)
+![Docker Image CI](https://github.com/imanzano/private-kit-service/workflows/Docker%20Image%20CI/badge.svg)
 
-An `mvn` wrapper is bundled. 
+An `mvn` wrapper is bundled.
 
 ## To run server
 ```
