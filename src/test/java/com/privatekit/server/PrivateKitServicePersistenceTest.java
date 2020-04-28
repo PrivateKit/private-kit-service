@@ -113,11 +113,15 @@ public class PrivateKitServicePersistenceTest {
 
         assertThat(save.getStatus()).isEqualTo("PENDING");
         assertThat(save).isEqualTo(app);
+        assertThat(save.hashCode()).isEqualTo(app.hashCode());
     }
 
     @Test
     public void testBasicSurveyPersistenceShouldWork() {
         final Survey persisted = surveyRepository.save(surveyToTest);
+
+        assertThat(persisted).isEqualTo(surveyToTest);
+        assertThat(persisted.hashCode()).isEqualTo(surveyToTest.hashCode());
 
         assertThat(persisted.getId()).isNotNull();
         assertThat(persisted.getAppNamespace()).isNotNull();
@@ -171,6 +175,7 @@ public class PrivateKitServicePersistenceTest {
         final Question questionPersisted = questionRepository.save(question);
 
         assertThat(questionPersisted).isEqualTo(question);
+        assertThat(questionPersisted.hashCode()).isEqualTo(question.hashCode());
     }
 
     @Test
@@ -183,6 +188,7 @@ public class PrivateKitServicePersistenceTest {
         assertThat(questionConditionPersisted.getId().getSurveyId()).isEqualTo(condition.getId().getSurveyId());
         assertThat(questionConditionPersisted.getId().getQuestionKey()).isEqualTo(condition.getId().getQuestionKey());
         assertThat(questionConditionPersisted).isEqualTo(condition);
+        assertThat(questionConditionPersisted.hashCode()).isEqualTo(condition.hashCode());
     }
 
     @Test
@@ -196,6 +202,7 @@ public class PrivateKitServicePersistenceTest {
         assertThat(optionPersisted.getValues().size()).isEqualTo(2);
 
         optionPersisted.getValues().forEach(v->{
+            assertThat(v.getId()).isNotNull();
             assertThat(v.getOption()).isNotNull();
             assertThat(v.getOptionLabel()).isNotNull();
             assertThat(v.getOptionValue()).isNotNull();
