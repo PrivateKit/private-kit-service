@@ -35,7 +35,7 @@ public class QuestionCondition implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        QuestionCondition that = (QuestionCondition) o;
+        final QuestionCondition that = (QuestionCondition) o;
         return Objects.equals(id, that.id);
     }
 

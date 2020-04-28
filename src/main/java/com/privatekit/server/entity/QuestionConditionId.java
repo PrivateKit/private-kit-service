@@ -28,7 +28,7 @@ public class QuestionConditionId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        QuestionConditionId that = (QuestionConditionId) o;
+        final QuestionConditionId that = (QuestionConditionId) o;
         return Objects.equals(response, that.response) &&
                 Objects.equals(surveyId, that.surveyId) &&
                 Objects.equals(questionKey, that.questionKey);
