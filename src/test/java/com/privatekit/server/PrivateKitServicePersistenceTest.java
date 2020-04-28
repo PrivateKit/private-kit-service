@@ -113,6 +113,8 @@ public class PrivateKitServicePersistenceTest {
 
         assertThat(save.getStatus()).isEqualTo("PENDING");
         assertThat(save).isEqualTo(app);
+        assertThat(save.getId()).isEqualTo(app.getId());
+        assertThat(save.getId()).isNotEqualTo(new AppId());
         assertThat(save.hashCode()).isEqualTo(app.hashCode());
     }
 
@@ -121,6 +123,7 @@ public class PrivateKitServicePersistenceTest {
         final Survey persisted = surveyRepository.save(surveyToTest);
 
         assertThat(persisted).isEqualTo(surveyToTest);
+        assertThat(persisted.getId()).isEqualTo(surveyToTest.getId());
         assertThat(persisted.hashCode()).isEqualTo(surveyToTest.hashCode());
 
         assertThat(persisted.getId()).isNotNull();
@@ -148,6 +151,20 @@ public class PrivateKitServicePersistenceTest {
     }
 
     @Test
+    public void testSurveyComparisionShouldNotBeEquals() {
+        final Survey persisted = surveyRepository.save(surveyToTest);
+        final Survey emptySurvey = new Survey();
+        assertThat(persisted).isNotEqualTo(emptySurvey);
+    }
+
+    @Test
+    public void testSurveyComparisionToNullShouldNotBeEquals() {
+        final Survey persisted = surveyRepository.save(surveyToTest);
+        final Survey emptySurvey = null;
+        assertThat(persisted).isNotEqualTo(emptySurvey);
+    }
+
+    @Test
     public void testBasicResponsePersistenceShouldWork() {
         final Survey persisted = surveyRepository.save(surveyToTest);
         final Set<SurveyResponseItem> items = new HashSet<>();
@@ -165,6 +182,8 @@ public class PrivateKitServicePersistenceTest {
 
         assertThat(surveyResponse.getSkipped()).isFalse();
         assertThat(surveyResponse).isEqualTo(response);
+        assertThat(surveyResponse.getId()).isEqualTo(response.getId());
+        assertThat(surveyResponse.getId()).isNotEqualTo(new SurveyResponseId());
         assertThat(surveyResponse.getItems().size()).isEqualTo(2);
     }
 
@@ -175,6 +194,8 @@ public class PrivateKitServicePersistenceTest {
         final Question questionPersisted = questionRepository.save(question);
 
         assertThat(questionPersisted).isEqualTo(question);
+        assertThat(questionPersisted.getId()).isEqualTo(question.getId());
+        assertThat(questionPersisted.getId()).isNotEqualTo(new QuestionId());
         assertThat(questionPersisted.hashCode()).isEqualTo(question.hashCode());
     }
 
@@ -188,6 +209,8 @@ public class PrivateKitServicePersistenceTest {
         assertThat(questionConditionPersisted.getId().getSurveyId()).isEqualTo(condition.getId().getSurveyId());
         assertThat(questionConditionPersisted.getId().getQuestionKey()).isEqualTo(condition.getId().getQuestionKey());
         assertThat(questionConditionPersisted).isEqualTo(condition);
+        assertThat(questionConditionPersisted.getId()).isEqualTo(condition.getId());
+        assertThat(questionConditionPersisted.getId()).isNotEqualTo(new QuestionConditionId());
         assertThat(questionConditionPersisted.hashCode()).isEqualTo(condition.hashCode());
     }
 
@@ -199,6 +222,8 @@ public class PrivateKitServicePersistenceTest {
         final SurveyOption optionPersisted = optionRepository.save(option);
 
         assertThat(optionPersisted).isEqualTo(option);
+        assertThat(optionPersisted.getId()).isEqualTo(option.getId());
+        assertThat(optionPersisted.getId()).isNotEqualTo(new SurveyOptionId());
         assertThat(optionPersisted.getValues().size()).isEqualTo(2);
 
         optionPersisted.getValues().forEach(v->{
@@ -222,6 +247,10 @@ public class PrivateKitServicePersistenceTest {
         final ScreenType screenTypePersisted2 =screenTypeRepository.save(screenType2);
 
         assertThat(screenTypePersisted1).isEqualTo(screenType1);
+        assertThat(screenTypePersisted1.hashCode()).isEqualTo(screenType1.hashCode());
+        assertThat(screenTypePersisted1.getId()).isEqualTo(screenType1.getId());
+        assertThat(screenTypePersisted1.getId()).isNotEqualTo(new SurveyScreenTypeId());
+        assertThat(screenTypePersisted1.hashCode()).isEqualTo(screenType1.hashCode());
         assertThat(screenTypePersisted1.getDescription()).isEqualTo("Hello World");
         assertThat(screenTypePersisted2).isEqualTo(screenType2);
         assertThat(screenTypePersisted2.getDescription()).isNull();
@@ -269,6 +298,8 @@ public class PrivateKitServicePersistenceTest {
         assertThat(screenTypePersisted2).isEqualTo(screenType2);
 
         assertThat(surveyScreenTypePersisted1).isEqualTo(surveyScreenType1);
+        assertThat(surveyScreenTypePersisted1.hashCode()).isEqualTo(surveyScreenType1.hashCode());
+        assertThat(surveyScreenTypePersisted1.getId()).isEqualTo(surveyScreenType1.getId());
         assertThat(surveyScreenTypePersisted2).isEqualTo(surveyScreenType2);
     }
 
