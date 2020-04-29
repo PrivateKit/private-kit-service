@@ -46,44 +46,7 @@ public class SurveyService {
 
         final Collection<Survey> all = surveyRepository.findByAppNamespace(appNamespace);
 
-        all.forEach(s -> {
-            final com.privatekit.server.controller.model.Survey survey = com.privatekit.server.controller.model.Survey.from(s);
-
-            final Collection<com.privatekit.server.entity.Question> questions = questionRepository.findBySurveyId(s.getId());
-
-            //collect questions
-            questions.forEach(q -> {
-                final Question question = Question.from(q);
-                survey.getQuestions().add(question);
-
-                final Collection<QuestionCondition> list = questionConditionRepository.findById_SurveyIdAndId_QuestionKey(q.getSurveyId(), q.getId().getQuestionKey());
-
-                question.getConditions()
-                        .addAll(list.stream()
-                                .map(i -> com.privatekit.server.controller.model.QuestionCondition.create(i.getId().getResponse(), i.getJumpToKey()))
-                                .collect(Collectors.toList()));
-
-            });
-
-            //collect options
-            final Optional<SurveyOption> surveyOption = optionRepository.findById_SurveyId(s.getId());
-            if (surveyOption.isPresent()) {
-                final SurveyOption so = surveyOption.get();
-                final Set<SurveyOptionValue> values = so.getValues();
-                final Option option = new Option();
-                option.setKey(so.getId().getOptionKey());
-
-                values.forEach(v -> option.getValues().add(OptionValue.from(v)));
-
-                survey.getOptions().add(option);
-            }
-
-            //collect screenTypes
-            final Collection<SurveyScreenType> screenTypes = surveyScreenTypeRepository.findById_SurveyId(s.getId());
-            screenTypes.forEach(st -> survey.getScreenTypes().add(st.getId().getScreenTypeKey()));
-
-            surveysList.addSurvey(survey);
-        });
+        all.forEach(s -> surveysList.addSurvey(getSurveyFrom(s)));
 
         return surveysList;
     }
@@ -167,5 +130,53 @@ public class SurveyService {
 
             responseRepository.save(sr);
         });
+    }
+
+    public Optional<com.privatekit.server.controller.model.Survey> getSurvey(Integer surveyId) {
+
+        final Optional<Survey> surveyDb = surveyRepository.findById(surveyId);
+
+        if (surveyDb.isEmpty()) return Optional.empty();
+
+        return Optional.of(getSurveyFrom(surveyDb.get()));
+    }
+
+    private com.privatekit.server.controller.model.Survey getSurveyFrom(Survey s) {
+        final com.privatekit.server.controller.model.Survey survey = com.privatekit.server.controller.model.Survey.from(s);
+
+        final Collection<com.privatekit.server.entity.Question> questions = questionRepository.findBySurveyId(s.getId());
+
+        //collect questions
+        questions.forEach(q -> {
+            final Question question = Question.from(q);
+            survey.getQuestions().add(question);
+
+            final Collection<QuestionCondition> list = questionConditionRepository.findById_SurveyIdAndId_QuestionKey(q.getSurveyId(), q.getId().getQuestionKey());
+
+            question.getConditions()
+                    .addAll(list.stream()
+                            .map(i -> com.privatekit.server.controller.model.QuestionCondition.create(i.getId().getResponse(), i.getJumpToKey()))
+                            .collect(Collectors.toList()));
+
+        });
+
+        //collect options
+        final Optional<SurveyOption> surveyOption = optionRepository.findById_SurveyId(s.getId());
+        if (surveyOption.isPresent()) {
+            final SurveyOption so = surveyOption.get();
+            final Set<SurveyOptionValue> values = so.getValues();
+            final Option option = new Option();
+            option.setKey(so.getId().getOptionKey());
+
+            values.forEach(v -> option.getValues().add(OptionValue.from(v)));
+
+            survey.getOptions().add(option);
+        }
+
+        //collect screenTypes
+        final Collection<SurveyScreenType> screenTypes = surveyScreenTypeRepository.findById_SurveyId(s.getId());
+        screenTypes.forEach(st -> survey.getScreenTypes().add(st.getId().getScreenTypeKey()));
+
+        return survey;
     }
 }

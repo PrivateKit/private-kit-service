@@ -44,13 +44,24 @@ public class SurveyController {
     }
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey")
-    @Transactional
     public @ResponseBody
     SurveyList getSurveys(@PathVariable("app_namespace") String appNamespace) {
 
         resolveApplicationApproved(appNamespace);
 
         return surveyService.getSurveys(appNamespace);
+    }
+
+    @GetMapping(value = "/v1.0/{app_namespace}/survey/{survey_id}")
+    public @ResponseBody
+    Survey getSurveys(@PathVariable("app_namespace") String appNamespace, @PathVariable("survey_id") Integer surveryId) {
+
+        resolveApplicationApproved(appNamespace);
+
+        final Optional<Survey> survey = surveyService.getSurvey(surveryId);
+        if (survey.isEmpty())
+            throw new ResponseStatusException(NOT_FOUND, "Survey not Found");
+        return survey.get();
     }
 
     @PostMapping(value = "/v1.0/{app_namespace}/survey",

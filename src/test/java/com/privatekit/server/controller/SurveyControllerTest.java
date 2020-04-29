@@ -185,6 +185,43 @@ public class SurveyControllerTest {
     }
 
     @Test
+    void testGetSurvey() throws Exception
+    {
+        MvcResult mvcResult = mockMvc.perform(get("/v1.0/1234/survey/1"))
+                //.andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        final String contentAsString = mvcResult.getResponse().getContentAsString();
+
+        final Survey survey = fromJsonString(contentAsString, Survey.class);
+
+        assertEquals("Symptoms Checker Survey", survey.getName());
+        assertThat(survey.getId()).isNotNull();
+
+        assertEquals("Symptoms Checker Survey", survey.getDescription());
+        assertFalse(survey.getQuestions().isEmpty());
+
+        final Question question = survey.getQuestions().get(0);
+
+        assertFalse(question.getConditions().isEmpty());
+
+        assertFalse(survey.getOptions().isEmpty());
+
+        assertFalse(survey.getScreenTypes().isEmpty());
+
+        assertEquals(Lists.list("911","Checkboox"),survey.getScreenTypes());
+    }
+
+    @Test
+    void testGetSurveyNotFound() throws Exception
+    {
+        mockMvc.perform(get("/v1.0/1234/survey/100000"))
+                //.andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void testGetSurveysFromInvalidNamespace() throws Exception
     {
 
