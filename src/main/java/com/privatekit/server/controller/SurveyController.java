@@ -53,6 +53,19 @@ public class SurveyController {
         return surveyService.getSurveys(appNamespace);
     }
 
+    @GetMapping(value = "/v1.0/{app_namespace}/survey/{survey_id}")
+    @Transactional
+    public @ResponseBody
+    Survey getSurveys(@PathVariable("app_namespace") String appNamespace, @PathVariable("survey_id") Integer surveryId) {
+
+        resolveApplicationApproved(appNamespace);
+
+        final Optional<Survey> survey = surveyService.getSurvey(surveryId);
+        if (survey.isEmpty())
+            throw new ResponseStatusException(NOT_FOUND, "Survey not Found");
+        return survey.get();
+    }
+
     @PostMapping(value = "/v1.0/{app_namespace}/survey",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
