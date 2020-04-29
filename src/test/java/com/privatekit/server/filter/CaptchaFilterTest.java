@@ -40,9 +40,9 @@ public class CaptchaFilterTest {
     }
 
     @Test
-    public void testResponseSendErrorIsCalledWhenAuthorizationHeaderIsOnlyWhiteSpaces() throws ServletException, IOException {
+    public void testResponseSendErrorIsCalledWhenAuthorizationHeaderDoesNotMatchPattern() throws ServletException, IOException {
         CaptchaFilter filter = makeFilter();
-        HttpServletRequest request = mockRequestWithAuthorizationHeader("   ");
+        HttpServletRequest request = mockRequestWithAuthorizationHeader("Patterns are for losers!");
         HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
         FilterChain filterChain = Mockito.mock(FilterChain.class);
         filter.doFilterInternal(request, response, filterChain);
@@ -52,7 +52,7 @@ public class CaptchaFilterTest {
     @Test
     public void testResponseSendErrorIfCaptchaIsInvalid() throws ServletException, IOException {
         CaptchaFilter filter = makeFilter(true);
-        HttpServletRequest request = mockRequestWithAuthorizationHeader("invalidToken");
+        HttpServletRequest request = mockRequestWithAuthorizationHeader("Basic someToken");
         HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
         FilterChain filterChain = Mockito.mock(FilterChain.class);
         filter.doFilterInternal(request, response, filterChain);
@@ -62,7 +62,7 @@ public class CaptchaFilterTest {
     @Test
     public void testFilterChainDoChainIfCaptchaIsValid() throws ServletException, IOException {
         CaptchaFilter filter = makeFilter();
-        HttpServletRequest request = mockRequestWithAuthorizationHeader("validToken");
+        HttpServletRequest request = mockRequestWithAuthorizationHeader("Basic someToken");
         HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
         FilterChain filterChain = Mockito.mock(FilterChain.class);
         filter.doFilterInternal(request, response, filterChain);
