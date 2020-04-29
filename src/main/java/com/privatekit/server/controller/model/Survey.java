@@ -11,6 +11,8 @@ import java.util.List;
 @Getter @Setter
 public class Survey {
 
+    private int id;
+
     @JsonProperty(required = true)
     @NotEmpty(message = "name is missed")
     private String name;
@@ -37,6 +39,7 @@ public class Survey {
     public static Survey from(com.privatekit.server.entity.Survey s) {
 
         final Survey survey = new Survey();
+        survey.setId(s.getId());
         survey.setName(s.getName());
         survey.setDescription(s.getDescription());
         survey.setImage(s.getImage());

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.inject.internal.util.Lists.newArrayList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Lists.list;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,6 +49,7 @@ public class SurveyControllerTest {
     @Autowired private OptionRepository optionRepository;
 
     @Autowired private SurveyController surveyController;
+    private int surveyId;
 
     @BeforeEach
     void initValues() {
@@ -63,7 +65,7 @@ public class SurveyControllerTest {
         s.setDescription("Symptoms Checker Survey");
         s.setAppNamespace("1234");
 
-        Integer surveyId= surveyRepository.save(s).getId();
+        surveyId= surveyRepository.save(s).getId();
 
         final com.privatekit.server.entity.Question q1 = new com.privatekit.server.entity.Question();
         QuestionId id = new QuestionId();
@@ -163,9 +165,11 @@ public class SurveyControllerTest {
         final SurveyList surveyList = fromJsonString(contentAsString, SurveyList.class);
         assertFalse(surveyList.getData().isEmpty());
 
-        final Survey survey = surveyList.getData().get(0);
+        final Survey survey = surveyList.getData().get(surveyList.getData().size()-1);
 
         assertEquals("Symptoms Checker Survey", survey.getName());
+        assertThat(survey.getId()).isNotNull();
+        assertEquals(surveyId, survey.getId());
         assertEquals("Symptoms Checker Survey", survey.getDescription());
         assertFalse(survey.getQuestions().isEmpty());
 
