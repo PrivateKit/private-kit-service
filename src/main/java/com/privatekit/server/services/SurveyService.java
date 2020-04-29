@@ -117,7 +117,7 @@ public class SurveyService {
             final SurveyResponseId id = new SurveyResponseId();
             id.setSurveyId(surveyId);
 
-            id.setQuestionKey(Integer.toString(i.getQuestionId()));
+            id.setQuestionKey(Integer.toString(i.getQuestionKey()));
             sr.setId(id);
             sr.setSkipped(i.isSkipped());
 
