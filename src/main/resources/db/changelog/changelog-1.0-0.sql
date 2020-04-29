@@ -53,6 +53,8 @@ CREATE TABLE questions(
   question_image varchar(255),
   question_type varchar(80) not null,
   question_required boolean,
+  question_description text,
+  question_title varchar(80),
   screen_type_key varchar(80),
   option_key varchar(80),
   PRIMARY KEY (survey_id, question_key),
