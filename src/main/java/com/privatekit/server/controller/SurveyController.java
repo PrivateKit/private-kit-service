@@ -44,7 +44,6 @@ public class SurveyController {
     }
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey")
-    @Transactional
     public @ResponseBody
     SurveyList getSurveys(@PathVariable("app_namespace") String appNamespace) {
 
@@ -54,7 +53,6 @@ public class SurveyController {
     }
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey/{survey_id}")
-    @Transactional
     public @ResponseBody
     Survey getSurveys(@PathVariable("app_namespace") String appNamespace, @PathVariable("survey_id") Integer surveryId) {
 
