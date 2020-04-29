@@ -50,7 +50,7 @@ public class CaptchaControllerTest {
                         "</head>\n" +
                         "<body>\n" +
                         "<div id=\"captcha\">\n" +
-                        "    <div style=\"text-align: center; padding-top: 100px;\">\n" +
+                        "    <div style=\"text-align: center; padding-top: 32px;\">\n" +
                         "        <div class=\"h-captcha\" style=\"display: inline-block; height: auto;\"\n" +
                         "             data-callback=\"onDataCallback\"\n" +
                         "             data-expired-callback=\"onDataExpiredCallback\"\n" +

@@ -11,8 +11,8 @@ public class AppConfig {
     @Bean("captchaFilterPathMatcher")
     public CaptchaFilterPathMatcher getCaptchaFilterPathMatcher() {
         return CaptchaFilterPathMatcher.with(
-                CaptchaFilterPathMatcherElement.from("/v1.0/*/survey", "GET", "POST"),
-                CaptchaFilterPathMatcherElement.from("/v1.0/*/survey/*/response", "GET", "POST")
+                CaptchaFilterPathMatcherElement.from("/v1.0/*/survey", "POST"),
+                CaptchaFilterPathMatcherElement.from("/v1.0/*/survey/*/response", "POST")
         );
     }
 }
