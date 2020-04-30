@@ -55,10 +55,14 @@ public class CaptchaFilter extends OncePerRequestFilter {
 
     private String getCaptchaToken(HttpServletRequest request) {
         final String authorization = request.getHeader("Authorization");
-        if (authorization == null || !authorization.matches("^Basic [\\w.]+$")) {
+        if (authorization == null) {
             return null;
         }
-        return authorization.split(" ")[1];
+        final String[] split = authorization.split(" ");
+        if (split.length != 2) {
+            return null;
+        }
+        return split[1];
     }
 
     private void unauthorized(HttpServletResponse response) throws IOException {
