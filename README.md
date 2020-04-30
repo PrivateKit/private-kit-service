@@ -12,9 +12,9 @@
 
 There are three profiles used dev, prod , container.
 
-_dev_ :      Used only for development without authentication enabled.
+_dev_ :      Used only for development. On authorized paths you don't need to send a valid token (Eg: "Authorization": "Basic anythingIsValid").
 
-_prod_:      Authentication enabled
+_prod_:      Authorized paths require a valid hCaptcha token.
 
 _container_: Used for docker-compose deployment 
 
@@ -22,9 +22,10 @@ _container_: Used for docker-compose deployment
 
 Private-Kit Server uses anonymous authentication through Captcha token.
 
-By default there is a Captcha implementation based on [HCaptcha](https://www.hcaptcha.com/)
+By default, there is a Captcha implementation based on [HCaptcha](https://www.hcaptcha.com/)
 
-IF you want to implement your own Captcha validation you have to re-implement the `com.privatekit.server.filter.CaptchaFilter`
+If you want to implement your own Captcha validation you have to add a new implementation of `com.privatekit.server.services.captcha.Captcha` and update the way it is included 
+in the spring profile.
 
 ## HCaptcha configuration
 
