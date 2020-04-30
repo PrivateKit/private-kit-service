@@ -1,0 +1,168 @@
+#%RAML 1.0
+annotationTypes:
+  PrivateKit-Survey:
+    type: any
+  Admin:
+    type: any
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/61af9918-c790-4c55-91bc-50487c82b45b/
+mediaType:
+  - application/json
+protocols:
+  - HTTPS
+  - HTTP
+(PrivateKit-Survey):
+  name: Group
+  description: Group annotation
+title: Register
+/app/register:
+  post:
+    displayName: Registration of an APP
+    body:
+      type: app
+    responses:
+      "200": {}
+    securedBy: []
+  (Admin): group
+/app/{namespace}:
+  put:
+    displayName: Update an App
+    body:
+      type: app
+    responses:
+      "200": {}
+    securedBy: []
+  get:
+    displayName: Get an app by App Id or Namespace
+    responses:
+      "200":
+        body:
+          type: app
+    securedBy: []
+  (Admin): group
+(Admin):
+  name: Group
+  description: Group annotation
+securedBy: []
+types:
+  app:
+    (Admin): group
+    properties:
+      namespace:
+        example: safepath
+        type: string
+      key:
+        example: Oj6m04uiCb
+        type: string
+      status:
+        enum:
+          - PENDING
+          - APPROVED
+          - REJECTED
+          - INACTIVE
+        example: PENDING
+        type: string
+  option:
+    (PrivateKit-Survey): group
+    example:
+      strict: true
+      value:
+        key: option_1
+        values:
+          - Yes
+          - No
+          - MayBe
+    properties:
+      key:
+        example: option_1
+        type: string
+      values:
+        items:
+          example: Yes
+          type: string
+        minItems: 1
+        uniqueItems: true
+  survey_response:
+    description: " "
+    (PrivateKit-Survey): group
+    properties:
+      response_value:
+        example: Great
+        type: string
+      skipped?:
+        example: true
+        type: boolean
+  survey:
+    (PrivateKit-Survey): group
+    properties:
+      name:
+        example: Symptoms Checker Survey
+        type: string
+      questions:
+        items:
+          type: survey_question
+      options:
+        items:
+          type: option
+  survey_question:
+    (PrivateKit-Survey): group
+    properties:
+      question_text:
+        example: How are you doing today?
+        type: string
+      question_type:
+        enum:
+          - TEXT
+          - CHECKBOX
+          - SELECT
+          - MULTISELECT
+          - RANGE
+        example: TEXT
+        type: string
+      required?:
+        default: false
+        example: true
+        type: boolean
+      option_key:
+        example: option_1
+        type: string
+/{app_namespace}/survey:
+  get:
+    displayName: Get all Surveys for an App
+    body: {}
+    responses:
+      "200":
+        body:
+          items:
+            type: survey
+    securedBy: []
+  post:
+    displayName: Create a survey
+    body:
+      type: survey
+    responses:
+      "200": {}
+  (PrivateKit-Survey): group
+/{app_namespace}/survey/{survey_id}:
+  get:
+    displayName: Get a Survey based on Survey Id
+    body: {}
+    responses:
+      "200":
+        body:
+          type: survey
+    securedBy: []
+  put:
+    displayName: Update a survey based on survey id
+    body:
+      type: survey
+    securedBy: []
+  (PrivateKit-Survey): group
+/{app_namespace}/survey/{survey_id}/response:
+  post:
+    displayName: Post a survey response
+    body:
+      items:
+        type: survey_response
+    responses:
+      "200": {}
+  (PrivateKit-Survey): group

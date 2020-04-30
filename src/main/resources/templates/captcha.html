@@ -1,0 +1,35 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
+    <script type="text/javascript">
+        var onloadCallback = function () {
+        };
+        var onDataCallback = function (response) {
+            window.ReactNativeWebView.postMessage(response);
+        };
+        var onDataExpiredCallback = function (error) {
+            console.log(error);
+            window.ReactNativeWebView.postMessage("expired");
+        };
+        var onDataErrorCallback = function (error) {
+            console.log(error);
+            window.ReactNativeWebView.postMessage("error");
+        }
+    </script>
+</head>
+<body>
+<div id="captcha">
+    <div style="text-align: center; padding-top: 32px;">
+        <div class="h-captcha" style="display: inline-block; height: auto;"
+             th:attr="data-sitekey=${siteKey}"
+             data-callback="onDataCallback"
+             data-expired-callback="onDataExpiredCallback"
+             data-error-callback="onDataErrorCallback">
+        </div>
+    </div>
+</div>
+</body>
+</html>
