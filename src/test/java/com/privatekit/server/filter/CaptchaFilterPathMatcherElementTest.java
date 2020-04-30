@@ -30,4 +30,9 @@ public class CaptchaFilterPathMatcherElementTest {
     public void testMatchFalseForInvalidMethod() {
         assertFalse(element.match("/v1.0/1/survey", "invalid"));
     }
+
+    @Test
+    public void testMatchTrueForTrailingSlash() {
+        assertTrue(element.match("/v1.0/1/survey/", "POST"));
+    }
 }
