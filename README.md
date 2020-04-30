@@ -18,7 +18,7 @@ _prod_:      Authentication enabled
 
 _container_: Used for docker-compose deployment 
 
-#Authentication
+# Authentication
 
 Private-Kit Server uses anonymous authentication through Captcha token.
 
@@ -26,15 +26,15 @@ By default there is a Captcha implementation based on [HCaptcha](https://www.hca
 
 IF you want to implement your own Captcha validation you have to re-implement the `com.privatekit.server.filter.CaptchaFilter`
 
-##HCaptcha configuration
+## HCaptcha configuration
 
 `captcha.site-key=${CAPTCHA_SITE_KEY:YOUR-SITE-KEY}`
 `captcha.secret=${CAPTCHA_SECRET:YOUR-SECRET}`
 `captcha.verify-url=${CAPTCHA_VERIFY_URL:https://hcaptcha.com/siteverify}`
 
-#Database
+# Database
 
-#Metrics
+# Metrics
 
 Enable metrics on PrivateKit-Service is easy because it is using [spring-boot-starter-actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html).
 By default only the health endpoint is enabled: `/actuator/health` 
@@ -61,10 +61,7 @@ For all interaction the choice is Spring Data repositories located in `com.priva
 There are persistence tests in `com.privatekit.server.PrivateKitServicePersistenceTest` that use an H2 memory database to test almost all repository interactions.
  
 
-
-
-
-#Compilation and Running
+# Compilation and Running
 
 An `mvn` wrapper is bundled.
 
