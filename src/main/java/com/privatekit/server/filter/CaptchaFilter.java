@@ -33,9 +33,9 @@ public class CaptchaFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
-        final String token = request.getHeader("Authorization");
+        String token = getCaptchaToken(request);
 
-        if (token == null || token.trim().isEmpty()) {
+        if (token == null) {
             unauthorized(response);
             return;
         }
@@ -51,6 +51,18 @@ public class CaptchaFilter extends OncePerRequestFilter {
 
     private boolean pathAndMethodCanBeIgnored(String path, String method) {
         return !matcher.match(path, method);
+    }
+
+    private String getCaptchaToken(HttpServletRequest request) {
+        final String authorization = request.getHeader("Authorization");
+        if (authorization == null) {
+            return null;
+        }
+        final String[] split = authorization.split(" ");
+        if (split.length != 2) {
+            return null;
+        }
+        return split[1];
     }
 
     private void unauthorized(HttpServletResponse response) throws IOException {
