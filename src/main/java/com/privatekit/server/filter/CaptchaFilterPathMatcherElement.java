@@ -1,6 +1,7 @@
 package com.privatekit.server.filter;
 
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -21,6 +22,10 @@ public class CaptchaFilterPathMatcherElement {
     }
 
     public boolean match(String path, String method) {
-        return new AntPathMatcher().match(pattern, path) && methods.contains(method);
+        return new AntPathMatcher().match(pattern, sanitizePath(path)) && methods.contains(method);
+    }
+
+    private String sanitizePath(String path) {
+        return StringUtils.trimTrailingCharacter(path, '/');
     }
 }
