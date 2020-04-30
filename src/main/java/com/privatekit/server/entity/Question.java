@@ -22,6 +22,12 @@ public class Question implements Serializable {
     @Column(name = "question_text")
     private String text;
 
+    @Column(name = "question_title")
+    private String title;
+
+    @Column(name = "question_description")
+    private String description;
+
     @Column(name = "question_image")
     private String image;
 
@@ -51,6 +57,8 @@ public class Question implements Serializable {
         question.setRequired(q.isRequired());
         question.setScreenType(q.getScreenType());
         question.setOptionKey(q.getOptionKey());
+        question.setTitle(q.getQuestionTitle());
+        question.setDescription(q.getQuestionDescription());
         return question;
     }
 

@@ -12,9 +12,9 @@ import java.util.List;
 @Setter
 public class SurveyResponse {
 
-    @JsonProperty(value = "question_id",required = true)
-    @NotEmpty(message = "question_id is missed")
-    private int questionId;
+    @JsonProperty(value = "question_key",required = true)
+    @NotEmpty(message = "question_key is missed")
+    private int questionKey;
 
     @JsonProperty(value = "response",required = true)
     @NotEmpty(message = "response_value list is missed")
@@ -22,9 +22,9 @@ public class SurveyResponse {
 
     private boolean skipped;
 
-    public static SurveyResponse create(int questionId, List<String> responseValue, boolean skipped) {
+    public static SurveyResponse create(int questionKey, List<String> responseValue, boolean skipped) {
         final SurveyResponse r = new SurveyResponse();
-        r.questionId = questionId;
+        r.questionKey = questionKey;
         r.responseValue.addAll(responseValue);
         r.skipped = skipped;
         return r;

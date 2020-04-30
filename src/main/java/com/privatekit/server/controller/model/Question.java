@@ -20,6 +20,14 @@ public class Question {
     @NotEmpty(message = "question_text is missed")
     private String questionText;
 
+    @JsonProperty(value = "question_description")
+    @NotEmpty(message = "question_description is missed")
+    private String questionDescription;
+
+    @JsonProperty(value = "question_title")
+    @NotEmpty(message = "question_title is missed")
+    private String questionTitle;
+
     @JsonProperty
     private String image;
 
@@ -49,6 +57,8 @@ public class Question {
         question.setOptionKey(s.getOptionKey());
         question.setQuestionText(s.getText());
         question.setImage(s.getImage());
+        question.setQuestionTitle(s.getTitle());
+        question.setQuestionDescription(s.getDescription());
         question.setRequired(s.getRequired());
         question.setScreenType(s.getScreenType());
 

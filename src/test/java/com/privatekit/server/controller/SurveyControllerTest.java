@@ -74,6 +74,8 @@ public class SurveyControllerTest {
         q1.setOptionKey("option_1");
         q1.setType("MULTI");
         q1.setText("Select your symptoms?");
+        q1.setDescription("Hello World");
+        q1.setTitle("Welcome");
         q1.setRequired(true);
         q1.setScreenType("Checkbox");
         q1.setId(id);
@@ -175,13 +177,7 @@ public class SurveyControllerTest {
 
         final Question question = survey.getQuestions().get(0);
 
-        assertFalse(question.getConditions().isEmpty());
-
-        assertFalse(survey.getOptions().isEmpty());
-
-        assertFalse(survey.getScreenTypes().isEmpty());
-
-        assertEquals(Lists.list("911","Checkboox"),survey.getScreenTypes());
+        assertQuestionValues(survey, question);
     }
 
     @Test
@@ -204,13 +200,7 @@ public class SurveyControllerTest {
 
         final Question question = survey.getQuestions().get(0);
 
-        assertFalse(question.getConditions().isEmpty());
-
-        assertFalse(survey.getOptions().isEmpty());
-
-        assertFalse(survey.getScreenTypes().isEmpty());
-
-        assertEquals(Lists.list("911","Checkboox"),survey.getScreenTypes());
+        assertQuestionValues(survey, question);
     }
 
     @Test
@@ -351,5 +341,18 @@ public class SurveyControllerTest {
         survey.getScreenTypes().add("911");
 
         return  survey;
+    }
+
+    private void assertQuestionValues(Survey survey, Question question) {
+        assertFalse(question.getConditions().isEmpty());
+        assertFalse(question.getQuestionDescription().isEmpty());
+        assertFalse(question.getQuestionTitle().isEmpty());
+        assertFalse(question.getQuestionText().isEmpty());
+
+        assertFalse(survey.getOptions().isEmpty());
+
+        assertFalse(survey.getScreenTypes().isEmpty());
+
+        assertEquals(Lists.list("911", "Checkboox"), survey.getScreenTypes());
     }
 }
