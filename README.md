@@ -40,7 +40,29 @@ Enable metrics on PrivateKit-Service is easy because it is using [spring-boot-st
 By default only the health endpoint is enabled: `/actuator/health` 
 
 # Database
+## Entity Relation Diagram
+![ER](er.png)
 ## PostgreSQL
+Private-Kit Server expects a PostgreSQL database compatible with jdbc driver 42.2.X
+
+The configuration is in the `src/main/resources/application.properties` Spring Boot Configuration file.
+## Version Control
+The database version control is performed by [Liquibase](https://www.liquibase.org/).
+
+The root changelog file is located in `src/main/resources/db/changelog/changelog-master.xml`. From this one all other changelogs are imported. The first one has a sql reference for creating the hole schema.
+## JPA
+All JPA mappings are located in `com.privatekit.server.entity` package. 
+
+The database has several relations but the mapping would contain only a few JPA Joins because of performance concerns.
+
+For all interaction the choice is Spring Data repositories located in `com.privatekit.server.repository`
+
+## Testing
+There are persistence tests in `com.privatekit.server.PrivateKitServicePersistenceTest` that use an H2 memory database to test almost all repository interactions.
+ 
+
+
+
 
 #Compilation and Running
 
