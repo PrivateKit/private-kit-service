@@ -57,6 +57,21 @@ The database has several relations but the mapping would contain only a few JPA 
 
 For all interaction the choice is Spring Data repositories located in `com.privatekit.server.repository`
 
+## Language Support 
+
+Survey API supports store surveys in different languages. The API uses the standard HTTP Header _accept-language_ in order to determine the language to associate to thre survey.
+
+For Example, POST a new survey
+
+`
+curl --location --request POST 'https://localhost:8080/v1.0/myNamespace/survey/' 
+     --header 'Content-Type: application/json'
+     --header 'Accept-Language: en'  
+     --data-raw '{ ... }'
+ `
+
+The HTTP Header accept-language is **MANDATORY**. If the header is not present a HTTP Bad Request (400) will be returned.
+
 ## Testing
 There are persistence tests in `com.privatekit.server.PrivateKitServicePersistenceTest` that use an H2 memory database to test almost all repository interactions.
  
