@@ -1,1 +1,1 @@
-ALTER TABLE survey ADD COLUMN survey_language varchar(255) DEFAULT NULL;
+ALTER TABLE surveys ADD COLUMN survey_language varchar(255) DEFAULT NULL;
