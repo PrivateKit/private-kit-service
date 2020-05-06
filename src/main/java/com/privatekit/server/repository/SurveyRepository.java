@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface SurveyRepository extends CrudRepository<Survey, Integer> {
 
-    Collection<Survey> findByAppNamespace(String appNamespace);
+    Collection<Survey> findByAppNamespaceAndSurveyLang(String appNamespace, String lang);
 
     Optional<Survey> findByAppNamespaceAndId(String appNamespace, int surveyId);
 }

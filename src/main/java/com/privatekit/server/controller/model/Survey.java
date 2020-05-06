@@ -21,6 +21,9 @@ public class Survey {
     @NotEmpty(message = "description is missed")
     private String description;
 
+    @JsonProperty("language")
+    private String surveyLanguage;
+
     @JsonProperty
     private String image;
 
@@ -43,6 +46,7 @@ public class Survey {
         survey.setName(s.getName());
         survey.setDescription(s.getDescription());
         survey.setImage(s.getImage());
+        survey.setSurveyLanguage(s.getSurveyLang());
 
         return survey;
     }

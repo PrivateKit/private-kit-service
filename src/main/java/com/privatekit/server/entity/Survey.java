@@ -23,6 +23,9 @@ public class Survey implements Serializable {
     @Column(name = "survey_name", nullable = false)
     private String name;
 
+    @Column(name = "survey_language")
+    private String surveyLang;
+
     @Column(name = "survey_description")
     private String description;
 
@@ -42,6 +45,7 @@ public class Survey implements Serializable {
         Survey survey = (Survey) o;
         return Objects.equals(id, survey.id) &&
                 Objects.equals(name, survey.name) &&
+                Objects.equals(surveyLang, survey.surveyLang) &&
                 Objects.equals(description, survey.description) &&
                 Objects.equals(image, survey.image) &&
                 Objects.equals(appNamespace, survey.appNamespace) &&
@@ -59,6 +63,7 @@ public class Survey implements Serializable {
         survey.setName(s.getName());
         survey.setDescription(s.getDescription());
         survey.setImage(s.getImage());
+        survey.setSurveyLang(s.getSurveyLanguage());
 
         return survey;
     }

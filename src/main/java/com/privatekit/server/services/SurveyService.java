@@ -41,10 +41,10 @@ public class SurveyService {
     @Autowired
     private ResponseRepository responseRepository;
 
-    public SurveyList getSurveys(String appNamespace) {
+    public SurveyList getSurveys(String appNamespace, String language) {
         final SurveyList surveysList = new SurveyList();
 
-        final Collection<Survey> all = surveyRepository.findByAppNamespace(appNamespace);
+        final Collection<Survey> all = surveyRepository.findByAppNamespaceAndSurveyLang(appNamespace,language);
 
         all.forEach(s -> surveysList.addSurvey(getSurveyFrom(s)));
 
