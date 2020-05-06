@@ -45,11 +45,11 @@ public class SurveyController {
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey")
     public @ResponseBody
-    SurveyList getSurveys(@PathVariable("app_namespace") String appNamespace) {
+    SurveyList getSurveys(@RequestHeader(value = "accept-language") String language, @PathVariable("app_namespace") String appNamespace) {
 
         resolveApplicationApproved(appNamespace);
 
-        return surveyService.getSurveys(appNamespace);
+        return surveyService.getSurveys(appNamespace, language);
     }
 
     @GetMapping(value = "/v1.0/{app_namespace}/survey/{survey_id}")
@@ -68,10 +68,11 @@ public class SurveyController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @Transactional
-    public ResponseEntity<String> postSurvey(@PathVariable("app_namespace") String appNamespace,
+    public ResponseEntity<String> postSurvey(@RequestHeader(value = "accept-language") String language,@PathVariable("app_namespace") String appNamespace,
                                              @Validated @RequestBody Survey survey) {
 
         final App app = resolveApplicationApproved(appNamespace);
+        survey.setSurveyLanguage(language);
 
         surveyService.create(app, survey);
 

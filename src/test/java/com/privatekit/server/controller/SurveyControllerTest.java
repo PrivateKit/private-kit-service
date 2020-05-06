@@ -62,6 +62,7 @@ public class SurveyControllerTest {
         final com.privatekit.server.entity.Survey s = new com.privatekit.server.entity.Survey();
         s.setAppKey("123456");
         s.setName("Symptoms Checker Survey");
+        s.setSurveyLang("en");
         s.setDescription("Symptoms Checker Survey");
         s.setAppNamespace("1234");
 
@@ -157,7 +158,7 @@ public class SurveyControllerTest {
     @Test
     void testGetSurveys() throws Exception
     {
-        MvcResult mvcResult = mockMvc.perform(get("/v1.0/1234/survey"))
+        MvcResult mvcResult = mockMvc.perform(get("/v1.0/1234/survey").header("accept-language","en"))
                 //.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").exists()).andReturn();
@@ -178,6 +179,28 @@ public class SurveyControllerTest {
         final Question question = survey.getQuestions().get(0);
 
         assertQuestionValues(survey, question);
+    }
+
+    @Test
+    void testGetSurveysNoLanguageInDb() throws Exception
+    {
+        MvcResult mvcResult = mockMvc.perform(get("/v1.0/1234/survey").header("accept-language","fr"))
+                //.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").exists()).andReturn();
+
+        final String contentAsString = mvcResult.getResponse().getContentAsString();
+
+        final SurveyList surveyList = fromJsonString(contentAsString, SurveyList.class);
+        assertTrue(surveyList.getData().isEmpty());
+    }
+
+    @Test
+    void testGetSurveysNoLanguageDefined() throws Exception
+    {
+        mockMvc.perform(get("/v1.0/1234/survey"))
+                //.andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -232,15 +255,15 @@ public class SurveyControllerTest {
     void testPostSurvey() throws Exception
     {
 
-        assertTrue(surveyRepository.findByAppNamespace("4567").isEmpty());
+        assertTrue(surveyRepository.findByAppNamespaceAndSurveyLang("4567", "en").isEmpty());
 
-        mockMvc.perform(post("/v1.0/4567/survey").content(asJsonString(createMockSurvey()))
+        mockMvc.perform(post("/v1.0/4567/survey").header("accept-language", "en").content(asJsonString(createMockSurvey()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 //.andDo(print())
                 .andExpect(status().isOk());
 
-        final String contentAsString = mockMvc.perform(get("/v1.0/4567/survey")).andReturn().getResponse().getContentAsString();
+        final String contentAsString = mockMvc.perform(get("/v1.0/4567/survey").header("accept-language","en")).andReturn().getResponse().getContentAsString();
 
         final SurveyList list = fromJsonString(contentAsString, SurveyList.class);
 
@@ -252,7 +275,17 @@ public class SurveyControllerTest {
     @Test
     void testPostSurveyBadRequest() throws Exception
     {
-        mockMvc.perform(post("/v1.0/none/survey").content(asJsonString(new Survey()))
+        mockMvc.perform(post("/v1.0/none/survey").header("accept-language","en").content(asJsonString(new Survey()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                //.andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testPostSurveyBadRequestNoLanguage() throws Exception
+    {
+        mockMvc.perform(post("/v1.0/none/survey").content(asJsonString(asJsonString(createMockSurvey())))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 //.andDo(print())
@@ -263,7 +296,7 @@ public class SurveyControllerTest {
     void testPostSurveyResponse() throws Exception
     {
 
-        final com.privatekit.server.entity.Survey survey = surveyRepository.findByAppNamespace("1234").iterator().next();
+        final com.privatekit.server.entity.Survey survey = surveyRepository.findByAppNamespaceAndSurveyLang("1234", "en").iterator().next();
         final SurveyResponse response = SurveyResponse.create(1234, list("Great"), true);
 
         mockMvc.perform(post(String.format("/v1.0/%s/survey/%d/response","1234", survey.getId()))
