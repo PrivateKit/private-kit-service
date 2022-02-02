@@ -17,7 +17,7 @@
     <properties>
         <java.version>11</java.version>
         <jacoco.version>0.8.5</jacoco.version>
-        <postgres.version>42.2.12.jre7</postgres.version>
+        <postgres.version>42.2.25.jre6</postgres.version>
         <springboot.version>2.2.6.RELEASE</springboot.version>
     </properties>
 
